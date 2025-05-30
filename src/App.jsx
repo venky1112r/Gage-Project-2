@@ -11,7 +11,7 @@ import GageLoginPage from "./pages/GageLoginpage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { DashboardProvider } from "./context/DashboardContext.jsx";
 import SettingComponent from "./components/SettingComponent"; // Import this
-
+import EmailPreview from './components/EmailPreview';
 function App() {
   return (
     <DashboardProvider>
@@ -22,6 +22,7 @@ function App() {
           <Route path="/login-admin" element={<GageLoginPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/test" element={<Test />} />
+          <Route path="/email-preview" element={<EmailPreview />} />
 
           {/* Protected Routes */}
           <Route element={<ProtectedRoute />}>
