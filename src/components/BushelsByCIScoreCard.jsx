@@ -125,12 +125,13 @@ const BushelsByCIScoreCard = ({ deliveredData, pendingData }) => {
   };
 
   return (
-    <Paper elevation={3} sx={{ borderRadius: 4, p: 2, flexGrow: 1 }}>
+    <Paper elevation={3} sx={{ borderRadius: 4, p: 2, flexGrow: 1,maxHeight: { md: "70vh" }, }}>
       <Typography
         variant="subtitle1"
         fontWeight="bold"
         gutterBottom
         sx={{ fontSize: "16px" }}
+        
       >
         Bushels by CI score level
       </Typography>

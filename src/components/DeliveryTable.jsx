@@ -58,7 +58,7 @@ const handleSave = () => {
 };
 
   return (
-          <Paper elevation={2} sx={{ borderRadius: 4, p: 2,  width: "100%" }}>
+          <Paper elevation={2} sx={{ borderRadius: 4, p: 2,  width: "100%",maxHeight: { md: "70vh" }, }}>
     <Box mt={1} sx={{ mt: 0 }}>
       <Box display="flex" justifyContent="flex-end" mt={2}>
         <Box
