@@ -17,7 +17,8 @@ import {
   MenuItem,
   InputLabel,
   FormControl,
-  Paper
+  Paper,
+  Typography
 } from "@mui/material";
 
 const DeliveryTable = () => {
@@ -58,8 +59,10 @@ const handleSave = () => {
 };
 
   return (
-          <Paper elevation={2} sx={{ borderRadius: 4, p: 2,  width: "100%",maxHeight: { md: "70vh" }, }}>
-    <Box mt={1} sx={{ mt: 0 }}>
+          <Paper elevation={2} sx={{ borderRadius: 4, p: 2,  width: "100%", height:'100%' }}>
+    {/* <Box mt={1} sx={{ mt: 0 }}> */}
+        <Box display="flex" justifyContent="space-between" mt={1}>
+         <Typography variant="subtitle1" fontWeight="bold" fontSize={"16px"}>Plants by CI Score Level</Typography>
       <Box display="flex" justifyContent="flex-end" mt={2}>
         <Box
           onClick={handleAddClick}
@@ -73,6 +76,7 @@ const handleSave = () => {
           }}
         >
           Add Capacity
+        </Box>
         </Box>
       </Box>
 
@@ -155,7 +159,7 @@ const handleSave = () => {
           </Button>
         </DialogActions>
       </Dialog>
-    </Box>
+    {/* </Box> */}
     </Paper>
   );
 };

@@ -44,7 +44,8 @@ const MySourcesTable = () => {
       percentTotal: "23.1%",
       authContracts: "98%",
       ciScore: 13.2,
-      color: "#D24545",
+      color: "#DC6B19",
+      // color: "#D24545",
     },
     {
       source: "Randal",
@@ -173,20 +174,28 @@ const MySourcesTable = () => {
   };
 
   const filteredRows = rows.filter((row) => {
-    const matchesSearch = row.source.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesSource = sourceFilter === "All Sources" || row.source === sourceFilter;
+    const matchesSearch = row.source
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+    const matchesSource =
+      sourceFilter === "All Sources" || row.source === sourceFilter;
     return matchesSearch && matchesSource;
   });
 
   return (
     <>
-      <Paper elevation={2} sx={{ borderRadius: 4, p: 2 , height: "100%"}}>
-        <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+      <Paper elevation={2} sx={{ borderRadius: 4, p: 2, height: "100%" }}>
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+          mb={2}
+        >
           <Typography variant="h6" fontWeight="bold" sx={{ fontSize: "18px" }}>
             My Sources
           </Typography>
 
-          <Box display="flex" alignItems="center" gap={1}>
+          <Box display="flex" alignItems="center" gap={1} flexWrap={'wrap'} justifyContent={'end'}>
             <Box ref={searchRef}>
               {searchOpen ? (
                 <TextField
@@ -223,7 +232,7 @@ const MySourcesTable = () => {
               value={sourceFilter}
               onChange={(e) => setSourceFilter(e.target.value)}
               sx={{
-                width: 160,
+                width: { xs: 80, sm: 130 ,md:130},
                 height: 32,
                 border: "1px solid #9EA9A3",
                 borderRadius: "6px",
@@ -243,7 +252,7 @@ const MySourcesTable = () => {
               value={cropFilter}
               onChange={(e) => setCropFilter(e.target.value)}
               sx={{
-                width: 100,
+                width: { xs: 80, sm: 80, md: 80 },
                 height: 32,
                 border: "1px solid #9EA9A3",
                 borderRadius: "6px",
@@ -259,12 +268,36 @@ const MySourcesTable = () => {
             <Table size="small">
               <TableHead sx={{ "& th": { fontWeight: "bold" } }}>
                 <TableRow>
-                  <TableCell sx={{ fontSize: { xs: "10px", sm: "10px", md: "12px" } }}>Source</TableCell>
-                  <TableCell sx={{ fontSize: { xs: "10px", sm: "10px", md: "12px" } }}>Type</TableCell>
-                  <TableCell sx={{ fontSize: { xs: "10px", sm: "10px", md: "12px" } }}>Bushels</TableCell>
-                  <TableCell sx={{ fontSize: { xs: "10px", sm: "10px", md: "12px" } }}>% of Total</TableCell>
-                  <TableCell sx={{ fontSize: { xs: "10px", sm: "10px", md: "12px" } }}>Auth Contracts</TableCell>
-                  <TableCell sx={{ fontSize: { xs: "10px", sm: "10px", md: "12px" } }}>CI Score</TableCell>
+                  <TableCell
+                    sx={{ fontSize: { xs: "10px", sm: "10px", md: "12px" } }}
+                  >
+                    Source
+                  </TableCell>
+                  <TableCell
+                    sx={{ fontSize: { xs: "10px", sm: "10px", md: "12px" } }}
+                  >
+                    Type
+                  </TableCell>
+                  <TableCell
+                    sx={{ fontSize: { xs: "10px", sm: "10px", md: "12px" } }}
+                  >
+                    Bushels
+                  </TableCell>
+                  <TableCell
+                    sx={{ fontSize: { xs: "10px", sm: "10px", md: "12px" } }}
+                  >
+                    % of Total
+                  </TableCell>
+                  <TableCell
+                    sx={{ fontSize: { xs: "10px", sm: "10px", md: "12px" } }}
+                  >
+                    Auth Contracts
+                  </TableCell>
+                  <TableCell
+                    sx={{ fontSize: { xs: "10px", sm: "10px", md: "12px" } }}
+                  >
+                    CI Score
+                  </TableCell>
                   <TableCell></TableCell>
                 </TableRow>
               </TableHead>
@@ -272,12 +305,34 @@ const MySourcesTable = () => {
               <TableBody>
                 {filteredRows.map((row, idx) => (
                   <TableRow key={idx} hover>
-                    <TableCell sx={{ fontSize: { xs: "10px", sm: "10px", md: "12px" } }}>{row.source}</TableCell>
-                    <TableCell sx={{ fontSize: { xs: "10px", sm: "10px", md: "12px" } }}>{row.type}</TableCell>
-                    <TableCell sx={{ fontSize: { xs: "10px", sm: "10px", md: "12px" } }}>{row.bushels}</TableCell>
-                    <TableCell sx={{ fontSize: { xs: "10px", sm: "10px", md: "12px" } }}>{row.percentTotal}</TableCell>
-                    <TableCell sx={{ fontSize: { xs: "10px", sm: "10px", md: "12px" } }}>{row.authContracts}</TableCell>
-                    <TableCell sx={{ fontSize: { xs: "10px", sm: "10px", md: "12px" } }}>
+                    <TableCell
+                      sx={{ fontSize: { xs: "10px", sm: "10px", md: "12px" } }}
+                    >
+                      {row.source}
+                    </TableCell>
+                    <TableCell
+                      sx={{ fontSize: { xs: "10px", sm: "10px", md: "12px" } }}
+                    >
+                      {row.type}
+                    </TableCell>
+                    <TableCell
+                      sx={{ fontSize: { xs: "10px", sm: "10px", md: "12px" } }}
+                    >
+                      {row.bushels}
+                    </TableCell>
+                    <TableCell
+                      sx={{ fontSize: { xs: "10px", sm: "10px", md: "12px" } }}
+                    >
+                      {row.percentTotal}
+                    </TableCell>
+                    <TableCell
+                      sx={{ fontSize: { xs: "10px", sm: "10px", md: "12px" } }}
+                    >
+                      {row.authContracts}
+                    </TableCell>
+                    <TableCell
+                      sx={{ fontSize: { xs: "10px", sm: "10px", md: "12px" } }}
+                    >
                       <Box display="flex" alignItems="center" gap={1}>
                         <Box
                           sx={{
@@ -287,13 +342,20 @@ const MySourcesTable = () => {
                             borderRadius: "2px",
                           }}
                         />
-                        <Typography sx={{ fontSize: { xs: "10px", sm: "10px", md: "12px" } }}>
+                        <Typography
+                          sx={{
+                            fontSize: { xs: "10px", sm: "10px", md: "12px" },
+                          }}
+                        >
                           {row.ciScore}
                         </Typography>
                       </Box>
                     </TableCell>
                     <TableCell align="center">
-                      <IconButton onClick={() => handleEditClick(row)} size="small">
+                      <IconButton
+                        onClick={() => handleEditClick(row)}
+                        size="small"
+                      >
                         <EditIcon fontSize="small" />
                       </IconButton>
                     </TableCell>
@@ -310,22 +372,45 @@ const MySourcesTable = () => {
         {selectedRow && (
           <DialogContent>
             <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <Typography>
-                  <strong>Grower:</strong> {selectedRow.source}
-                </Typography>
+              <Grid item xs={12} sx={{ mt: 1 }}>
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="Search Source"
+                  value={selectedRow.source}
+                  InputProps={{
+                    readOnly: true,
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <SearchIcon />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
               </Grid>
-              <Grid item xs={12}>
-                <Typography>
-                  <strong>Type:</strong> {selectedRow.type}
-                </Typography>
-                <Typography>
-                  <strong>Commodity:</strong> {cropFilter}
-                </Typography>
-                <Typography>
-                  <strong>Address:</strong> {selectedRow.address || "N/A"}
-                </Typography>
+
+              <Grid container spacing={4} sx={{ pl: 3 }}>
+                <Grid item xs={12} md={3} sx={{ mt: 1 }}>
+                  <Typography noWrap>
+                    <strong>Type:</strong> {selectedRow.type}
+                  </Typography>
+                </Grid>
+
+                <Grid item xs={12} md={3}>
+                  <Typography>
+                    <strong>Commodity:</strong> {cropFilter}
+                  </Typography>
+                </Grid>
+
+                <Grid item xs={12} md={6}>
+                  <Typography
+                    sx={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}
+                  >
+                    <strong>Address:</strong> {selectedRow.address || "N/A"}
+                  </Typography>
+                </Grid>
               </Grid>
+
               <Grid item xs={12}>
                 <FormControl fullWidth>
                   <InputLabel>CI Score Grade level</InputLabel>
@@ -335,21 +420,48 @@ const MySourcesTable = () => {
                     label="CI Score Grade level"
                   >
                     <MenuItem value="">No Score</MenuItem>
-                    <MenuItem value="A">A</MenuItem>
-                    <MenuItem value="B">B</MenuItem>
-                    <MenuItem value="C">C</MenuItem>
+                    <MenuItem value="Grower">Grower</MenuItem>
+                    <MenuItem value="Retailer">Retailer</MenuItem>
+                    <MenuItem value="National">National</MenuItem>
+                    <MenuItem value="Custom">Custom</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>
+
+              {/* Two new fields */}
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  size="small"
+                  type="number"
+                  label="Custom Ci Score *"
+                  placeholder="Enter value for Field 1"
+                  variant="outlined"
+                />
+              </Grid>
+              {ciScoreGrade === "Custom" && (
+                <Grid item xs={12}>
+                  <TextField
+                    fullWidth
+                    size="small"
+                    label="Reason for update"
+                    placeholder="Enter reason"
+                    variant="outlined"
+                  />
+                </Grid>
+              )}
+
               <Grid item xs={12}>
                 <Typography variant="caption" color="textSecondary">
                   Last updated: January 31, 2025
                 </Typography>
               </Grid>
+
               <Grid item xs={12}>
                 <Box p={2} bgcolor="#fff3cd" borderRadius={1}>
                   <Typography variant="body2">
-                    ⚠ Any saved changes are applied to CI Score calculations overnight.
+                    ⚠ Any saved changes are applied to CI Score calculations
+                    overnight.
                   </Typography>
                 </Box>
               </Grid>

@@ -16,7 +16,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 // const navItems = ["customers", "user-management"];
 
-const AdminHeaderComponent = ({ email: propEmail, userrole: propUserrole }) => {
+const AdminHeaderComponent = ({ email: propEmail, userrole: propUserrole, plantid: propPlantid   }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const theme = useTheme();
@@ -26,6 +26,7 @@ const AdminHeaderComponent = ({ email: propEmail, userrole: propUserrole }) => {
   // Use state from location if available, fallback to props
   const email = location.state?.email || propEmail || "guest@example.com";
   const userrole = location.state?.userrole || propUserrole || "guest";
+  const plantid = location.state?.plantid || propPlantid ;
 
     // Conditionally define nav items based on user role
   const allNavItems = ["customers", "user-management"];
@@ -39,7 +40,7 @@ const AdminHeaderComponent = ({ email: propEmail, userrole: propUserrole }) => {
 
   const handleTabChange = (event, newValue) => {
     const path = `/admin/${navItems[newValue].toLowerCase()}`;
-    navigate(path, { state: { email, userrole } });
+    navigate(path, { state: { email, userrole, plantid } });
   };
 
   const handleAvatarClick = (event) => {
@@ -64,7 +65,7 @@ const handleLogout = () => {
 
   const handleDashboard = () => {
     handleMenuClose();
-    navigate("/dashboard", { state: { email, userrole } });
+    navigate("/dashboard", { state: { email, userrole, plantid } });
   };
 
   return (
@@ -82,7 +83,7 @@ const handleLogout = () => {
         <Typography
           variant="h3"
           sx={{ fontWeight: "bold", color: "#003320", cursor: "pointer" }}
-          onClick={() => navigate("/dashboard", { state: { email, userrole } })}
+          onClick={() => navigate("/dashboard", { state: { email, userrole, plantid } })}
         >
           G.A.G.E.
         </Typography>

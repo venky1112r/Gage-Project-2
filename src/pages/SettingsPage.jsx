@@ -13,6 +13,8 @@ const SettingsPage = () => {
 
   const email = location.state?.email || "guest@example.com";
   const userrole = location.state?.userrole || "guest";
+    const plantid = location.state?.plantid ;
+   console.log(" settingsPlant ID:", plantid);
 
   // Redirect /settings to /settings/business-rules and preserve state
   useEffect(() => {

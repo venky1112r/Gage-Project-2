@@ -13,10 +13,11 @@ const AdminPage = () => {
   const location = useLocation();
   const email = location.state?.email || "guest@example.com";
   const userrole = location.state?.userrole || "guest";
+  const plantid = location.state?.plantid;
 
   return (
     <Box sx={{ backgroundColor: "#f5f5f5" }}>
-      <AdminHeaderComponent email={email} userrole={userrole} />
+      <AdminHeaderComponent email={email} userrole={userrole} plantid={plantid} />
 
       <Routes>
         {/* Redirect default to /customers */}

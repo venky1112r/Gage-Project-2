@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { useLocation,  } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Typography,
@@ -16,116 +15,146 @@ import {
   Grid,
   InputAdornment,
 } from "@mui/material";
+import { useLocation } from "react-router-dom";
+import { useDashboard } from "../context/DashboardContext";
+import { saveManualInput } from "../services/api.js";
 
 const ManualInputsComponent = () => {
+  const { manualInputs, loadManualInputs } = useDashboard();
+  console.log("manualInputs", manualInputs);
+  useEffect(() => {
+    const loadData = async () => {
+      if (!manualInputs || manualInputs.length === 0) {
+        await loadManualInputs();
+      } else {
+        const formatted = manualInputs.map((row) => ({
+          ...row,
+          createdate: row.createdate
+            ? new Date(row.createdate).toISOString().split("T")[0]
+            : "",
+          updateddate: row.updateddate
+            ? new Date(row.updateddate).toISOString().split("T")[0]
+            : "",
+        }));
+        console.log("Formatted rows", formatted);
+
+        setRows(formatted);
+        // setRows(manualInputs);
+      }
+    };
+
+    loadData();
+  }, [manualInputs, loadManualInputs]);
+
   const location = useLocation();
   const email = location.state?.email || "guest@example.com"; // ✅ use email for updatedby
-
-  const [rows, setRows] = useState([
-    {
-      from_date: "2025-04-01",
-      to_date: "2025-04-30",
-      fossil_Natural_Gas: "12.5",
-      coal_Usage: "3.2",
-      grid_Electricity_Usage: "4.1",
-      renewable_Electricity_Usage: "1.3",
-      natural_gas_renewable: "1.3",
-      bushels_processed: "1350000",
-      ethanol_produced: "42.8",
-      lastupdatedon: "05/10/2025",
-      updatedby: "Alice Johnson",
-    },
-    {
-      from_date: "2025-03-01",
-      to_date: "2025-03-31",
-      fossil_Natural_Gas: "11.9",
-      coal_Usage: "2.8",
-      grid_Electricity_Usage: "3.9",
-      renewable_Electricity_Usage: "1.1",
-       natural_gas_renewable: "1.3",
-      bushels_processed: "1280000",
-      ethanol_produced: "40.2",
-      lastupdatedon: "04/09/2025",
-      updatedby: "Bob Smith",
-    },
-    {
-      from_date: "2025-02-01",
-      to_date: "2025-02-28",
-      fossil_Natural_Gas: "13.1",
-      coal_Usage: "3.5",
-      grid_Electricity_Usage: "4.3",
-      renewable_Electricity_Usage: "1.4",
-       natural_gas_renewable: "1.3",
-      bushels_processed: "1400000",
-      ethanol_produced: "44.0",
-      lastupdatedon: "03/07/2025",
-      updatedby: "Clara Lee",
-    },
-    {
-      from_date: "2025-02-01",
-      to_date: "2025-02-28",
-      fossil_Natural_Gas: "13.1",
-      coal_Usage: "3.5",
-      grid_Electricity_Usage: "4.3",
-      renewable_Electricity_Usage: "1.4",
-       natural_gas_renewable: "1.3",
-      bushels_processed: "1400000",
-      ethanol_produced: "44.0",
-      lastupdatedon: "03/07/2025",
-      updatedby: "Clara Lee",
-    },
-    {
-      from_date: "2025-03-01",
-      to_date: "2025-03-31",
-      fossil_Natural_Gas: "11.9",
-      coal_Usage: "2.8",
-      grid_Electricity_Usage: "3.9",
-      renewable_Electricity_Usage: "1.1",
-       natural_gas_renewable: "1.3",
-      bushels_processed: "1280000",
-      ethanol_produced: "40.2",
-      lastupdatedon: "04/09/2025",
-      updatedby: "Bob Smith",
-    },
-    {
-      from_date: "2025-03-01",
-      to_date: "2025-03-31",
-      fossil_Natural_Gas: "11.9",
-      coal_Usage: "2.8",
-      grid_Electricity_Usage: "3.9",
-      renewable_Electricity_Usage: "1.1",
-       natural_gas_renewable: "1.3",
-      bushels_processed: "1280000",
-      ethanol_produced: "40.2",
-      lastupdatedon: "04/09/2025",
-      updatedby: "Bob Smith",
-    },
-    {
-      from_date: "2025-02-01",
-      to_date: "2025-02-28",
-      fossil_Natural_Gas: "13.1",
-      coal_Usage: "3.5",
-      grid_Electricity_Usage: "4.3",
-      renewable_Electricity_Usage: "1.4",
-       natural_gas_renewable: "1.3",
-      bushels_processed: "1400000",
-      ethanol_produced: "44.0",
-      lastupdatedon: "03/07/2025",
-      updatedby: "Clara Lee",
-    },
-  ]);
+  const [rows, setRows] = useState([]);
+  console.log("after use effect rows", rows);
+  // const [rows, setRows] = useState([
+  //   {
+  //     createdate: "2025-04-01",
+  //     updateddate: "2025-04-30",
+  //     fossilgasused: "12.5",
+  //     coalusage: "3.2",
+  //     gridelectricusage: "4.1",
+  //     renewablelectricusage: "1.3",
+  //     naturalgasrenewable45z: "1.3",
+  //     totalbushelsprocessed: "1350000",
+  //     totalethanolproduced: "42.8",
+  //     updatedon: "05/10/2025",
+  //     updatedby: "Alice Johnson",
+  //   },
+  //   {
+  //     createdate: "2025-03-01",
+  //     updateddate: "2025-03-31",
+  //     fossilgasused: "11.9",
+  //     coalusage: "2.8",
+  //     gridelectricusage: "3.9",
+  //     renewablelectricusage: "1.1",
+  //      naturalgasrenewable45z: "1.3",
+  //     totalbushelsprocessed: "1280000",
+  //     totalethanolproduced: "40.2",
+  //     updatedon: "04/09/2025",
+  //     updatedby: "Bob Smith",
+  //   },
+  //   {
+  //     createdate: "2025-02-01",
+  //     updateddate: "2025-02-28",
+  //     fossilgasused: "13.1",
+  //     coalusage: "3.5",
+  //     gridelectricusage: "4.3",
+  //     renewablelectricusage: "1.4",
+  //      naturalgasrenewable45z: "1.3",
+  //     totalbushelsprocessed: "1400000",
+  //     totalethanolproduced: "44.0",
+  //     updatedon: "03/07/2025",
+  //     updatedby: "Clara Lee",
+  //   },
+  //   {
+  //     createdate: "2025-02-01",
+  //     updateddate: "2025-02-28",
+  //     fossilgasused: "13.1",
+  //     coalusage: "3.5",
+  //     gridelectricusage: "4.3",
+  //     renewablelectricusage: "1.4",
+  //      naturalgasrenewable45z: "1.3",
+  //     totalbushelsprocessed: "1400000",
+  //     totalethanolproduced: "44.0",
+  //     updatedon: "03/07/2025",
+  //     updatedby: "Clara Lee",
+  //   },
+  //   {
+  //     createdate: "2025-03-01",
+  //     updateddate: "2025-03-31",
+  //     fossilgasused: "11.9",
+  //     coalusage: "2.8",
+  //     gridelectricusage: "3.9",
+  //     renewablelectricusage: "1.1",
+  //      naturalgasrenewable45z: "1.3",
+  //     totalbushelsprocessed: "1280000",
+  //     totalethanolproduced: "40.2",
+  //     updatedon: "04/09/2025",
+  //     updatedby: "Bob Smith",
+  //   },
+  //   {
+  //     createdate: "2025-03-01",
+  //     updateddate: "2025-03-31",
+  //     fossilgasused: "11.9",
+  //     coalusage: "2.8",
+  //     gridelectricusage: "3.9",
+  //     renewablelectricusage: "1.1",
+  //      naturalgasrenewable45z: "1.3",
+  //     totalbushelsprocessed: "1280000",
+  //     totalethanolproduced: "40.2",
+  //     updatedon: "04/09/2025",
+  //     updatedby: "Bob Smith",
+  //   },
+  //   {
+  //     createdate: "2025-02-01",
+  //     updateddate: "2025-02-28",
+  //     fossilgasused: "13.1",
+  //     coalusage: "3.5",
+  //     gridelectricusage: "4.3",
+  //     renewablelectricusage: "1.4",
+  //      naturalgasrenewable45z: "1.3",
+  //     totalbushelsprocessed: "1400000",
+  //     totalethanolproduced: "44.0",
+  //     updatedon: "03/07/2025",
+  //     updatedby: "Clara Lee",
+  //   },
+  // ]);
 
   const [formData, setFormData] = useState({
-    from_date: "",
-    to_date: "",
-    fossil_Natural_Gas: "",
-    coal_Usage: "",
-    grid_Electricity_Usage: "",
-    renewable_Electricity_Usage: "",
-    natural_gas_renewable: "",
-    bushels_processed: "",
-    ethanol_produced: "",
-    conversion_efficiency: "",
+    createdate: "",
+    updateddate: "",
+    fossilgasused: "",
+    coalusage: "",
+    gridelectricusage: "",
+    renewablelectricusage: "",
+    naturalgasrenewable45z: "",
+    totalbushelsprocessed: "",
+    totalethanolproduced: "",
+    convefficiency: "",
   });
 
   const [formErrors, setFormErrors] = useState({});
@@ -138,29 +167,29 @@ const ManualInputsComponent = () => {
   };
 
   const requiredFields = [
-    "from_date",
-    "to_date",
-    "fossil_Natural_Gas",
-    "coal_Usage",
-    "grid_Electricity_Usage",
-    "renewable_Electricity_Usage",
-    "natural_gas_renewable",
-    "bushels_processed",
-    "ethanol_produced",
+    "createdate",
+    "updateddate",
+    "fossilgasused",
+    "coalusage",
+    "gridelectricusage",
+    "renewablelectricusage",
+    "naturalgasrenewable45z",
+    "totalbushelsprocessed",
+    "totalethanolproduced",
   ];
 
   const numberFields = [
-    "fossil_Natural_Gas",
-    "coal_Usage",
-    "grid_Electricity_Usage",
-    "renewable_Electricity_Usage",
-    "natural_gas_renewable",
-    "bushels_processed",
-    "ethanol_produced",
-    "conversion_efficiency",
+    "fossilgasused",
+    "coalusage",
+    "gridelectricusage",
+    "renewablelectricusage",
+    "naturalgasrenewable45z",
+    "totalbushelsprocessed",
+    "totalethanolproduced",
+    "convefficiency",
   ];
 
-  const handleSave = () => {
+  const handleSave = async () => {
     const errors = {};
     for (const field of requiredFields) {
       if (!formData[field]) {
@@ -181,26 +210,46 @@ const ManualInputsComponent = () => {
 
     const newRow = {
       ...formData,
-      updatedby: email, // ✅ Corrected: use logged-in email
-      lastupdatedon: new Date().toLocaleDateString(),
-    };
+      plantid: 1001, // <-- You need to pass a valid plant ID
+      fossilgasused: Number(formData.fossilgasused),
+      coalusage: Number(formData.coalusage),
+      gridelectricusage: Number(formData.gridelectricusage),
+      renewablelectricusage: Number(formData.renewablelectricusage),
+      naturalgasrenewable45z: Number(formData.naturalgasrenewable45z),
+      totalbushelsprocessed: Number(formData.totalbushelsprocessed),
+      totalethanolproduced: Number(formData.totalethanolproduced),
+      convefficiency: formData.convefficiency
+        ? Number(formData.convefficiency)
+        : undefined,
 
-    setRows((prev) => [newRow, ...prev]);
-    clearForm();
+      updatedby: email,
+      updatedon: new Date().toISOString().split("T")[0], // "2025-06-02T09:30:00.000Z"
+    };
+    console.log("newRow", newRow);
+    console.log("Sending to API:", JSON.stringify(newRow, null, 2));
+
+    try {
+      await saveManualInput(newRow); // ✅ API call
+      setRows((prev) => [newRow, ...prev]);
+      clearForm();
+    } catch (err) {
+      console.error("Error saving data:", err.message);
+      alert("Failed to save data: " + err.message);
+    }
   };
 
   const clearForm = () => {
     setFormData({
-      from_date: "",
-      to_date: "",
-      fossil_Natural_Gas: "",
-      coal_Usage: "",
-      grid_Electricity_Usage: "",
-      renewable_Electricity_Usage: "",
-      natural_gas_renewable: "",
-      bushels_processed: "",
-      ethanol_produced: "",
-      conversion_efficiency: "",
+      createdate: "",
+      updateddate: "",
+      fossilgasused: "",
+      coalusage: "",
+      gridelectricusage: "",
+      renewablelectricusage: "",
+      naturalgasrenewable45z: "",
+      totalbushelsprocessed: "",
+      totalethanolproduced: "",
+      convefficiency: "",
     });
     setFormErrors({});
   };
@@ -212,18 +261,71 @@ const ManualInputsComponent = () => {
   };
 
   const fields = [
-    { label: "From Date", field: "from_date", type: "date", unit: "" },
-    { label: "To Date", field: "to_date", type: "date", unit: "" },
-    { label: "Fossil Natural Gas (NG)", field: "fossil_Natural_Gas", type: "number", unit: "Thousand MMBTU" },
-    { label: "Coal Usage (CL)", field: "coal_Usage", type: "number", unit: "Short tons" },
-    { label: "Grid Electricity Usage (GE)", field: "grid_Electricity_Usage", type: "number", unit: "Million kWh" },
-    { label: "Renewable Electricity Usage (RE)", field: "renewable_Electricity_Usage", type: "number", unit: "Million kWh" },
-    { label: "Natural Gas Renewable - 45z", field: "natural_gas_renewable", type: "number", unit: "MMBtu" },
-    { label: "Total Bushels Processed", field: "bushels_processed", type: "number", unit: "BU" },
-    { label: "Total Ethanol Produced", field: "ethanol_produced", type: "number", unit: "Million Gallons" },
-    { label: "Conversion Efficiency", field: "conversion_efficiency", type: "number", unit: "" },
+    { label: "From Date", field: "createdate", type: "date", unit: "" },
+    { label: "To Date", field: "updateddate", type: "date", unit: "" },
+    {
+      label: "Fossil Natural Gas (NG)",
+      field: "fossilgasused",
+      type: "number",
+      unit: "Thousand MMBTU",
+    },
+    {
+      label: "Coal Usage (CL)",
+      field: "coalusage",
+      type: "number",
+      unit: "Short tons",
+    },
+    {
+      label: "Grid Electricity Usage (GE)",
+      field: "gridelectricusage",
+      type: "number",
+      unit: "Million kWh",
+    },
+    {
+      label: "Renewable Electricity Usage (RE)",
+      field: "renewablelectricusage",
+      type: "number",
+      unit: "Million kWh",
+    },
+    {
+      label: "Natural Gas Renewable - 45z",
+      field: "naturalgasrenewable45z",
+      type: "number",
+      unit: "MMBtu",
+    },
+    {
+      label: "Total Bushels Processed",
+      field: "totalbushelsprocessed",
+      type: "number",
+      unit: "BU",
+    },
+    {
+      label: "Total Ethanol Produced",
+      field: "totalethanolproduced",
+      type: "number",
+      unit: "Million Gallons",
+    },
+    {
+      label: "Conversion Efficiency",
+      field: "convefficiency",
+      type: "number",
+      unit: "",
+    },
   ];
+ const handledownloadtemplate = () => {
+    const csvContent = `producer_id,verdova_org_id,fmid_co_name,fmid_first_name,fmid_middle_name,fmid_last_name,fmid_addr_1,fmid_addr_2,fmid_city,fmid_ste_cd,fmid_zip_cd,fmid_ein_cd,fmid_county,latitude,longitude,crop_year,ci_score_provisional_gc02e_per_MJ,ci_score_provisional_gc02e_per_bu,ci_score_provisional_reduction_percent,ci_score_provisional_date,ci_score_final_gc02e_per_MJ,ci_score_final_gc02e_per_bu,ci_score_final_reduction_percent,ci_score_final_date,ci_score_parameter,ci_score_parameter_units,status,error`;
 
+    const blob = new Blob([csvContent], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "template.csv";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
   return (
     <Box sx={{ p: 3 }}>
       <Typography variant="h6" sx={{ mb: 2 }}>
@@ -278,7 +380,7 @@ const ManualInputsComponent = () => {
 
       <TableContainer component={Paper} sx={{ mt: 3 }}>
         <Table size="small">
-          <TableHead sx={{ "& th": { textAlign: "center"}} }>
+          <TableHead sx={{ "& th": { textAlign: "center" } }}>
             <TableRow>
               <TableCell>#</TableCell>
               <TableCell>From Date</TableCell>
@@ -294,29 +396,29 @@ const ManualInputsComponent = () => {
               <TableCell>Updated By</TableCell>
             </TableRow>
           </TableHead>
-          <TableBody sx={{ "& td": { textAlign: "center"} }}>
+          <TableBody sx={{ "& td": { textAlign: "center" } }}>
             {rows
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row, idx) => (
-                <TableRow key={idx} >
-                  <TableCell  >{page * rowsPerPage + idx + 1}</TableCell>
-                  <TableCell>{row.from_date}</TableCell>
-                  <TableCell>{row.to_date}</TableCell>
-                  <TableCell>{row.fossil_Natural_Gas}</TableCell>
-                  <TableCell>{row.coal_Usage}</TableCell>
-                  <TableCell>{row.grid_Electricity_Usage}</TableCell>
-                  <TableCell>{row.renewable_Electricity_Usage}</TableCell>
-                  <TableCell>{row.natural_gas_renewable}</TableCell>
-                  <TableCell>{row.bushels_processed}</TableCell>
-                  <TableCell>{row.ethanol_produced}</TableCell>
-                  <TableCell>{row.lastupdatedon}</TableCell>
+                <TableRow key={idx}>
+                  <TableCell>{page * rowsPerPage + idx + 1}</TableCell>
+                  <TableCell>{row.createdate}</TableCell>
+                  <TableCell>{row.updateddate}</TableCell>
+                  <TableCell>{row.fossilgasused}</TableCell>
+                  <TableCell>{row.coalusage}</TableCell>
+                  <TableCell>{row.gridelectricusage}</TableCell>
+                  <TableCell>{row.renewablelectricusage}</TableCell>
+                  <TableCell>{row.naturalgasrenewable45z}</TableCell>
+                  <TableCell>{row.totalbushelsprocessed}</TableCell>
+                  <TableCell>{row.totalethanolproduced}</TableCell>
+                  <TableCell>{row.updatedon}</TableCell>
                   <TableCell>{row.updatedby}</TableCell>
                 </TableRow>
               ))}
           </TableBody>
         </Table>
       </TableContainer>
-            {/* <TablePagination
+      {/* <TablePagination
         component="div"
         count={rows.length}
         rowsPerPage={rowsPerPage}
@@ -328,7 +430,6 @@ const ManualInputsComponent = () => {
           `${from}-${to} of ${count} row${count !== 1 ? 's' : ''}`
         }
       /> */}
-
 
       <TablePagination
         component="div"
@@ -345,19 +446,34 @@ const ManualInputsComponent = () => {
           }`;
         }}
       />
-        <Box mt={4}>
-                <Typography variant="h6" sx={{ mt: 2 }} >
-                 Operational Net CI Score 
-                  </Typography>
-                  <Button variant="outlined" sx={{ mt: 2, color: '#000000', borderColor: '#000000' }} >Upload Operational CI Score File</Button>
-                  <Typography variant="body2" sx={{ mt: 2, color: "text.secondary" }}>File format: .csv file (5MB max)</Typography>
-              </Box>
+      <Box mt={4}>
+        <Typography variant="h6" sx={{ mt: 2 }}>
+          Operational Net CI Score
+        </Typography>
+        <Button
+          variant="outlined"
+          sx={{ mt: 2, color: "#000000", borderColor: "#000000" }}
+        >
+          Upload Operational CI Score File
+        </Button>
+        <Typography
+          variant="body2"
+          onClick={handledownloadtemplate}
+          sx={{
+            mt: 1,
+            color: "text.link",
+            cursor: "pointer",
+            textDecoration: "underline",
+          }}
+        >
+          Download Template
+        </Typography>
+        <Typography variant="body2" sx={{ mt: 2, color: "text.secondary" }}>
+          File format: .csv file (5MB max)
+        </Typography>
+      </Box>
     </Box>
   );
 };
 
 export default ManualInputsComponent;
-
-
-
-    

@@ -37,7 +37,7 @@ let intPart = value;
         justifyContent: "space-between",
       }}
     >
-      <Box>
+      <Box flex={1} display={'flex'} flexDirection={'column'}>
         <Box display="flex" alignItems="center" mb={1}>
           <Typography variant={labelVariant} fontWeight="bold" sx={{ fontSize: "16px"}}>
             {label}
@@ -55,7 +55,7 @@ let intPart = value;
           </Box>
         </Box>
 
-        <Box display="flex" alignItems="flex-end" flexWrap="nowrap">
+        <Box display="flex" alignItems="flex-end" flexWrap="nowrap" marginTop={'auto'}>
           {isContractedCIScore ? (
             <>
               <Typography

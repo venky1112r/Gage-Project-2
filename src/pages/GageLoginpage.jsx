@@ -42,18 +42,18 @@ const GageLoginPage = () => {
       //   return;
       // }
 
-      const { token, userrole } = data;
+      const { token, userrole, plantid } = data;
 
       // ✅ Store the token in session storage
       sessionStorage.setItem("token", token);
 
       // ✅ Save user role
       setUserrole(userrole);
-
+console.log("Plant ID:", plantid);
       console.log("Login successful", userrole);
 
       // ✅ Navigate to dashboard
-      navigate("/dashboard", { state: { email, userrole } });
+      navigate("/dashboard", { state: { email, userrole, plantid } });
     } catch (err) {
       console.error("Login error:", err);
       setErrors({ general: "Server error. Please try again." });

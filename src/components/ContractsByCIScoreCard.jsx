@@ -70,37 +70,52 @@ const data = Object.values(combinedDataMap);
 
 
 const CustomToggleButton = styled(ToggleButton)`
- min-width: 120px ;
+ min-width: 90px ;
  text-transform: none`;
 
 
   return (
-    <Paper elevation={2} sx={{ borderRadius: 4, p: 2, pb: 8,maxHeight: { md: "70vh" },}}>
-      <Stack direction="row" justifyContent="space-between" alignItems="center">
+    <Paper elevation={2} sx={{ borderRadius: 4, p: 2,height:'100%' }}>
+      <Stack direction="row" justifyContent="space-between" alignItems="center" flexWrap={"wrap"}>
         <Typography variant="subtitle1" fontWeight="bold" gutterBottom sx={{ fontSize: "16px"}}>
           Contracts by CI Score level
         </Typography>
+        <Box display="flex" justifyContent={'end'} flex={1}>
         <ToggleButtonGroup
-          value={view}
-          exclusive
-          onChange={handleViewChange}
-          size="small"
-        >
-          <CustomToggleButton value="delivered">
-            Delivered
-            <CheckIcon fontSize="small" sx={{ m: 1 }} />
-          </CustomToggleButton>
-          <CustomToggleButton value="pending">
-            Pending
-            {view === "pending" && (
-              <CheckIcon fontSize="small" sx={{ m: 1 }} />
-            )}
-          </CustomToggleButton>
-        </ToggleButtonGroup>
+  value={view}
+  exclusive
+  onChange={handleViewChange}
+  size="small"
+  sx={{
+    "& .MuiToggleButton-root": {
+      px: { xs: 1, sm: 2, md: 3 },          // Padding X changes with screen size
+      py: { xs: 0.5, sm: 1, md: 1 },               // Padding Y for height adjustment
+      fontSize: { xs: "0.7rem", sm: "0.8rem", md: "0.9rem" }, // Font size responsive
+    },
+  }}
+>
+  <CustomToggleButton value="delivered">
+    Delivered
+    <CheckIcon
+      fontSize="inherit"
+      sx={{ ml: 1, fontSize: { xs: "12px", sm: "14px", md: "14px" } }}
+    />
+  </CustomToggleButton>
+  <CustomToggleButton value="pending">
+    Pending
+    {view === "pending" && (
+      <CheckIcon
+        fontSize="inherit"
+        sx={{ ml: 1, fontSize: { xs: "12px", sm: "14px", md: "14px" } }}
+      />
+    )}
+  </CustomToggleButton>
+</ToggleButtonGroup>
+</Box>
       </Stack>
 
       <Box mt={1}>
-        <ContractsChart data={data} width={500} height={400} view={view} />
+        <ContractsChart data={data} width={500} height={300} view={view} />
         <Divider
             orientation="horizontal"
             flexItem

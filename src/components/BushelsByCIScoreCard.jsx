@@ -102,11 +102,12 @@ const BushelsByCIScoreCard = ({ deliveredData, pendingData }) => {
 
     // Center text
     const total = chartData.reduce((sum, d) => sum + d.value, 0);
-    let centerText = "100.00%"; // Set default to 100%
+    let centerText = "100%"; // Set default to 100%
 
     if (selectedIndex !== null) {
       const selected = chartData[selectedIndex];
       const percentage = ((selected.value / total) * 100).toFixed(1);
+      console.log("Check center circle percentage",percentage);
       centerText = `${percentage}%`;
     }
 
@@ -125,13 +126,12 @@ const BushelsByCIScoreCard = ({ deliveredData, pendingData }) => {
   };
 
   return (
-    <Paper elevation={3} sx={{ borderRadius: 4, p: 2, flexGrow: 1,maxHeight: { md: "70vh" }, }}>
+    <Paper elevation={3} sx={{ borderRadius: 4, p: 2, flexGrow: 1,height:'100%' }}>
       <Typography
         variant="subtitle1"
         fontWeight="bold"
         gutterBottom
         sx={{ fontSize: "16px" }}
-        
       >
         Bushels by CI score level
       </Typography>
@@ -151,6 +151,7 @@ const BushelsByCIScoreCard = ({ deliveredData, pendingData }) => {
               backgroundColor:
                 view === "delivered" ? "#transparent" : "transparent",
               border: view === "delivered" ? "1px solid #1b5e20" : "none",
+              height:'100%'
             }}
           >
             <Typography variant="caption">DELIVERED BUSHELS   <Typography component="span" variant="caption" sx={{ fontSize: '0.75rem' }}>
@@ -176,6 +177,7 @@ const BushelsByCIScoreCard = ({ deliveredData, pendingData }) => {
               backgroundColor:
                 view === "pending" ? "#transparent" : "transparent",
               border: view === "pending" ? "1px solid #1b5e20" : "none",
+               height:'100%'
             }}
           >
             <Typography variant="caption">PENDING BUSHELS   <Typography component="span" variant="caption" sx={{ fontSize: '0.75rem' }}>
@@ -195,7 +197,10 @@ const BushelsByCIScoreCard = ({ deliveredData, pendingData }) => {
         justifyContent="space-around"
         alignItems="center"
         mt={2}
+        flexWrap={'wrap'}
+        gap={2}
       >
+        <Box display={'flex'} gap={1}>
         <IconButton onClick={toggleView}>
           <ArrowBackIos fontSize="small" />
         </IconButton>
@@ -205,8 +210,8 @@ const BushelsByCIScoreCard = ({ deliveredData, pendingData }) => {
         <IconButton onClick={toggleView}>
           <ArrowForwardIos fontSize="small" />
         </IconButton>
-
-        <Box>
+</Box>
+        <Box display={{ xs: "flex",sm:"flex", md:"block"}} flexDirection={{xs:"row",sm:"row",md:"column"}} flexWrap={"wrap"} gap={1}>
           {chartData.map((item, i) => (
             <Box key={i} display="flex" alignItems="center" mb={1}>
               <Box

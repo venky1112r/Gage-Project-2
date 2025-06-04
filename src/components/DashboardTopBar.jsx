@@ -24,7 +24,7 @@ const DashboardTopBar = ({ hideTimeRange = false }) => {
       display="flex"
       justifyContent="space-between"
       alignItems={{ xs: "flex-start", md: "center" }}
-      flexDirection={{ xs: "column", md: "row" }}
+      flexDirection={{ xs: "column", sm: "row", md: "row" }}
       px={{ xs: 1, sm: 2, md: 3 }}
       py={2}
       mt={0}
@@ -69,11 +69,11 @@ fontSize: 18,
 
       {/* Right side: Time range selector with equal width */}
       {!hideTimeRange && (
-       <Box mt={{ xs: 2, md: 0 }} alignSelf={{ xs: "flex-start", md: "flex-end" }}>
+       <Box mt={{ xs: 0, md: 0 }} alignSelf={{ xs: "flex-end",sm:"flex-end", md: "flex-end" }}>
           <Typography
             variant="caption"
             display="block"
-            textAlign={{xs:'left',md:'right'}}
+            textAlign={{xs:'right',sm:'right',md:'right'}}
             sx={{ mb: 0.5 }}
           >
             Last updated: January 31, 2025
