@@ -116,11 +116,11 @@ const CustomToggleButton = styled(ToggleButton)`
 
       <Box mt={1}>
         <ContractsChart data={data} width={500} height={300} view={view} />
-        <Divider
+        {/* <Divider
             orientation="horizontal"
             flexItem
             sx={{ borderColor: "#D3D3D3" }}
-          />
+          /> */}
         {/* <DeliveryTable /> */}
       </Box>
     </Paper>

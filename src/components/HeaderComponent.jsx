@@ -47,7 +47,7 @@ const HeaderComponent = ({ email, userrole, plantid }) => {
     sessionStorage.removeItem("settingsTab");
     sessionStorage.removeItem("token");
     handleMenuClose();
-    userrole === "gadmin"
+    userrole === "GAdmin"
       ? navigate("/login-admin")
       : navigate("/login");
   };
@@ -156,13 +156,13 @@ const HeaderComponent = ({ email, userrole, plantid }) => {
             >
               <MenuItem disabled>{`Logged in as: ${email}`}</MenuItem>
 
-              {userrole === "gadmin" && (
+              {userrole === "GAdmin" && (
                 <MenuItem onClick={handleManageCustomers}>
                   Manage Customers / Users
                 </MenuItem>
               )}
 
-              {userrole === "padmin" && (
+              {userrole === "PAdmin" && (
                 <MenuItem onClick={handleManageUsers}>Manage Users</MenuItem>
               )}
 

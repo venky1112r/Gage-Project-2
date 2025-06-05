@@ -13,7 +13,6 @@ import {
   TextField,
   InputBase,
   TablePagination,
-  
 } from "@mui/material";
 import React, { useState } from "react";
 import SaveIcon from "@mui/icons-material/Save";
@@ -23,30 +22,24 @@ import SearchIcon from "@mui/icons-material/Search";
 
 const BusinessRulesComponent = () => {
   const [page, setPage] = useState(0);
-const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const [rows, setRows] = useState([
     {
       gradelevel: "National",
-      civalue: "14.6",
+      civalue: "29.7",
       lastupdatedon: "01/01/2023",
       updatedby: "John Doe",
     },
     {
       gradelevel: "Retailer1",
-      civalue: "12.6",
+      civalue: "30.00",
       lastupdatedon: "01/01/2023",
       updatedby: "John Doe",
     },
     {
       gradelevel: "Retailer2",
-      civalue: "10.6",
-      lastupdatedon: "01/01/2023",
-      updatedby: "John Doe",
-    },
-    {
-      gradelevel: "Retailer3",
-      civalue: "8.6",
+      civalue: "40.00",
       lastupdatedon: "01/01/2023",
       updatedby: "John Doe",
     },
@@ -57,13 +50,13 @@ const [rowsPerPage, setRowsPerPage] = useState(5);
   const [searchText, setSearchText] = useState("");
 
   const handleChangePage = (event, newPage) => {
-  setPage(newPage);
-};
+    setPage(newPage);
+  };
 
-const handleChangeRowsPerPage = (event) => {
-  setRowsPerPage(parseInt(event.target.value, 10));
-  setPage(0);
-};
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
   const handleEdit = (idx) => {
     setEditIdx(idx);
@@ -86,16 +79,14 @@ const handleChangeRowsPerPage = (event) => {
   const handleSearch = (e) => {
     setSearchText(e.target.value.toLowerCase());
   };
-  
 
-
-  const filteredRows = rows.filter(
-    (row) => row.gradelevel.toLowerCase().includes(searchText)
+  const filteredRows = rows.filter((row) =>
+    row.gradelevel.toLowerCase().includes(searchText)
   );
-const paginatedRows = filteredRows.slice(
-  page * rowsPerPage,
-  page * rowsPerPage + rowsPerPage
-);
+  const paginatedRows = filteredRows.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage
+  );
   const handledownloadtemplate = () => {
     const csvContent = `producer_id,verdova_org_id,fmid_co_name,fmid_first_name,fmid_middle_name,fmid_last_name,fmid_addr_1,fmid_addr_2,fmid_city,fmid_ste_cd,fmid_zip_cd,fmid_ein_cd,fmid_county,latitude,longitude,crop_year,ci_score_provisional_gc02e_per_MJ,ci_score_provisional_gc02e_per_bu,ci_score_provisional_reduction_percent,ci_score_provisional_date,ci_score_final_gc02e_per_MJ,ci_score_final_gc02e_per_bu,ci_score_final_reduction_percent,ci_score_final_date,ci_score_parameter,ci_score_parameter_units,status,error`;
 
@@ -202,15 +193,32 @@ const paginatedRows = filteredRows.slice(
           </TableBody>
         </Table>
       </TableContainer>
-<TablePagination
-  component="div"
-  count={filteredRows.length}
-  page={page}
-  onPageChange={handleChangePage}
-  rowsPerPage={rowsPerPage}
-  onRowsPerPageChange={handleChangeRowsPerPage}
-  rowsPerPageOptions={[5, 10, 25]}
-/>
+      <TablePagination
+        component="div"
+        count={filteredRows.length}
+        page={page}
+        onPageChange={handleChangePage}
+        rowsPerPage={rowsPerPage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+        rowsPerPageOptions={[5, 10, 25]}
+        showFirstButton={true}
+        showLastButton={true}
+        sx={{
+          flexWrap: "wrap",
+          justifyContent: "center",
+          display: "flex",
+          gap: 1,
+          fontSize: { xs: "12px", sm: "14px" },
+          ".MuiTablePagination-toolbar": {
+            flexWrap: "wrap",
+            justifyContent: "center",
+          },
+          ".MuiTablePagination-selectLabel, .MuiTablePagination-displayedRows":
+            {
+              margin: { xs: "4px 0", sm: "0" },
+            },
+        }}
+      />
 
       <Box mt={4}>
         <Typography variant="h6" sx={{ mt: 2 }}>
@@ -224,7 +232,7 @@ const paginatedRows = filteredRows.slice(
         </Button>
         <Typography
           variant="body2"
-          onClick={handledownloadtemplate} 
+          onClick={handledownloadtemplate}
           sx={{
             mt: 1,
             color: "text.link",

@@ -69,7 +69,7 @@ fontSize: 18,
 
       {/* Right side: Time range selector with equal width */}
       {!hideTimeRange && (
-       <Box mt={{ xs: 0, md: 0 }} alignSelf={{ xs: "flex-end",sm:"flex-end", md: "flex-end" }}>
+       <Box mt={{ xs: 1, md: 1 }} alignSelf={{ xs: "flex-end",sm:"flex-end", md: "flex-end" }}>
           <Typography
             variant="caption"
             display="block"

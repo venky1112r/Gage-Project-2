@@ -1,63 +1,48 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { Box, CircularProgress } from "@mui/material";
 import HeaderComponent from "../components/HeaderComponent";
 import SummaryCardsSection from "../components/SummaryCardsSection";
 import DashboardBottomComponent from "../components/DashboardBottomComponent";
 import DashboardTopBar from "../components/DashboardTopBar";
-import ProtectedRoute from "../components/ProtectedRoute";
+// import ProtectedRoute from "../components/ProtectedRoute";
 import { useDashboard } from "../context/DashboardContext.jsx";
 
 const DashboardPage = () => {
-  ProtectedRoute(); // Ensure the route is protected
 
-  const { dashboardData, loading, loadDashboardData } = useDashboard();
+  const {
+    summaryMetrics,
+    contractsCi,
+    plantsCi,
+    loadSummaryMetrics,
+    loadContractsCi,
+    loadPlantsCi,
+  } = useDashboard();
   const location = useLocation();
   const email = location.state?.email || "guest@example.com";
   const userrole = location.state?.userrole || "guest";
-   const plantid = location.state?.plantid;
-   console.log("Plant ID:", plantid);
+  const plantid = location.state?.plantid;
+  const [loading, setLoading] = useState(true);
+  console.log("Plant ID:", plantid);
 
   useEffect(() => {
-    if (!dashboardData) {
-      loadDashboardData();
-    }
-  }, [dashboardData]);
+    const loadAllData = async () => {
+      setLoading(true);
+      try {
+        if (!summaryMetrics) await loadSummaryMetrics();
+        if (!contractsCi) await loadContractsCi(); // Add this line || mySources.length === 0) await loadMySources();
+        if (!plantsCi) await loadPlantsCi();
+       
+      } catch (error) {
+        console.error("Error loading dashboard data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  // const [dashboardData, setDashboardData] = useState(null);
-  // const [loading, setLoading] = useState(true);
-
-  //   useEffect(() => {
-
-  //    if (!dashboardData) {
-  //     fetchDashboardData();
-  //   }
-  //   }, []);
-  //  const fetchDashboardData = async () => {
-  //       try {
-  //         const response = await fetch("http://localhost:3000/api/dashboard-metrics", {
-  //           method: "GET",
-  //           credentials: "include", // Important for sending cookies if your backend uses them
-  //           headers: {
-  //             "Content-Type": "application/json"
-  //             // If you're using JWT in Authorization header, add:
-  //             // "Authorization": `Bearer ${yourToken}`
-  //           }
-  //         });
-
-  //         if (!response.ok) {
-  //           throw new Error("Failed to fetch dashboard data");
-  //         }
-
-  //         const data = await response.json();
-  //         console.log(data,"data");
-  //         setDashboardData(data);
-  //       } catch (err) {
-  //         console.error("Error fetching dashboard data:", err);
-  //       } finally {
-  //         setLoading(false);
-  //       }
-  //     };
+    loadAllData();
+  }, [loadSummaryMetrics, loadContractsCi, loadPlantsCi]);
+  
   return (
     <Box
       sx={{
@@ -75,8 +60,8 @@ const DashboardPage = () => {
       >
         <HeaderComponent email={email} userrole={userrole} plantid={plantid} />
         <DashboardTopBar />
-        <SummaryCardsSection data={dashboardData} loading={loading} />
-        <DashboardBottomComponent data={dashboardData} />
+        <SummaryCardsSection data={{ summaryMetrics, contractsCi, plantsCi }} />
+        <DashboardBottomComponent data={{ summaryMetrics, contractsCi, plantsCi }} />
       </Box>
 
       {/* Spinner overlay */}

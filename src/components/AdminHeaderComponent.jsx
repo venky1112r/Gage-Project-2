@@ -30,7 +30,7 @@ const AdminHeaderComponent = ({ email: propEmail, userrole: propUserrole, planti
 
     // Conditionally define nav items based on user role
   const allNavItems = ["customers", "user-management"];
-  const navItems = userrole === "padmin"
+  const navItems = userrole === "PAdmin"
     ? allNavItems.filter((item) => item !== "customers") // Hide "customers" for padmin
     : allNavItems;
 
@@ -56,7 +56,7 @@ const handleLogout = () => {
   sessionStorage.removeItem("settingsTab");
   sessionStorage.removeItem("token");
   handleMenuClose();
-  userrole === "gadmin"? navigate("/login-admin"):navigate("/login");
+  userrole === "GAdmin"? navigate("/login-admin"):navigate("/login");
 };
 
 

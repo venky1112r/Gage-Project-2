@@ -42,16 +42,16 @@ const BushelsByCIScoreCard = ({ deliveredData, pendingData }) => {
     ...(view === "delivered" ? deliveredData : pendingData || []),
   ].sort((a, b) => customOrder.indexOf(a.label) - customOrder.indexOf(b.label));
 
- const totalDelivered = (deliveredData
-  ?.reduce((sum, d) => sum + d.value, 0) / 1_000_000)
-  .toLocaleString(undefined, {
+  const totalDelivered = (
+    deliveredData?.reduce((sum, d) => sum + d.value, 0) / 1_000_000
+  ).toLocaleString(undefined, {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   });
 
-  const totalPending = (pendingData
-  ?.reduce((sum, d) => sum + d.value, 0) / 1_000_000)
-  .toLocaleString(undefined, {
+  const totalPending = (
+    pendingData?.reduce((sum, d) => sum + d.value, 0) / 1_000_000
+  ).toLocaleString(undefined, {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   });
@@ -102,12 +102,12 @@ const BushelsByCIScoreCard = ({ deliveredData, pendingData }) => {
 
     // Center text
     const total = chartData.reduce((sum, d) => sum + d.value, 0);
-    let centerText = "100%"; // Set default to 100%
+    let centerText = total === 0 || total === undefined ? "0%" : "100%"; // Set default to 100%
 
     if (selectedIndex !== null) {
       const selected = chartData[selectedIndex];
       const percentage = ((selected.value / total) * 100).toFixed(1);
-      console.log("Check center circle percentage",percentage);
+      console.log("Check center circle percentage", percentage);
       centerText = `${percentage}%`;
     }
 
@@ -126,7 +126,10 @@ const BushelsByCIScoreCard = ({ deliveredData, pendingData }) => {
   };
 
   return (
-    <Paper elevation={3} sx={{ borderRadius: 4, p: 2, flexGrow: 1,height:'100%' }}>
+    <Paper
+      elevation={3}
+      sx={{ borderRadius: 4, p: 2, flexGrow: 1, height: "100%" }}
+    >
       <Typography
         variant="subtitle1"
         fontWeight="bold"
@@ -151,12 +154,19 @@ const BushelsByCIScoreCard = ({ deliveredData, pendingData }) => {
               backgroundColor:
                 view === "delivered" ? "#transparent" : "transparent",
               border: view === "delivered" ? "1px solid #1b5e20" : "none",
-              height:'100%'
+              height: "100%",
             }}
           >
-            <Typography variant="caption">DELIVERED BUSHELS   <Typography component="span" variant="caption" sx={{ fontSize: '0.75rem' }}>
-        (in Millions)
-      </Typography></Typography>
+            <Typography variant="caption">
+              DELIVERED BUSHELS{" "}
+              <Typography
+                component="span"
+                variant="caption"
+                sx={{ fontSize: "0.75rem" }}
+              >
+                (in Millions)
+              </Typography>
+            </Typography>
             <Typography variant="h6" fontWeight="bold">
               {totalDelivered}
             </Typography>
@@ -177,12 +187,19 @@ const BushelsByCIScoreCard = ({ deliveredData, pendingData }) => {
               backgroundColor:
                 view === "pending" ? "#transparent" : "transparent",
               border: view === "pending" ? "1px solid #1b5e20" : "none",
-               height:'100%'
+              height: "100%",
             }}
           >
-            <Typography variant="caption">PENDING BUSHELS   <Typography component="span" variant="caption" sx={{ fontSize: '0.75rem' }}>
-        (in Millions)
-      </Typography></Typography>
+            <Typography variant="caption">
+              PENDING BUSHELS{" "}
+              <Typography
+                component="span"
+                variant="caption"
+                sx={{ fontSize: "0.75rem" }}
+              >
+                (in Millions)
+              </Typography>
+            </Typography>
             <Typography variant="h6" fontWeight="bold">
               {totalPending}
             </Typography>
@@ -197,21 +214,44 @@ const BushelsByCIScoreCard = ({ deliveredData, pendingData }) => {
         justifyContent="space-around"
         alignItems="center"
         mt={2}
-        flexWrap={'wrap'}
+        flexWrap={"wrap"}
         gap={2}
       >
-        <Box display={'flex'} gap={1}>
-        <IconButton onClick={toggleView}>
-          <ArrowBackIos fontSize="small" />
-        </IconButton>
+        <Box display={"flex"} gap={1}>
+          <IconButton
+            onClick={toggleView}
+            sx={{
+              boxShadow: "none",
+              "&:hover": {
+                backgroundColor: "transparent", // or any other bg color you prefer
+                boxShadow: "none",
+              },
+            }}
+          >
+            <ArrowBackIos fontSize="small" />
+          </IconButton>
 
-        <Box ref={ref} />
+          <Box ref={ref} />
 
-        <IconButton onClick={toggleView}>
-          <ArrowForwardIos fontSize="small" />
-        </IconButton>
-</Box>
-        <Box display={{ xs: "flex",sm:"flex", md:"block"}} flexDirection={{xs:"row",sm:"row",md:"column"}} flexWrap={"wrap"} gap={1}>
+          <IconButton
+            onClick={toggleView}
+            sx={{
+              boxShadow: "none",
+              "&:hover": {
+                backgroundColor: "transparent", // or any other bg color you prefer
+                boxShadow: "none",
+              },
+            }}
+          >
+            <ArrowForwardIos fontSize="small" />
+          </IconButton>
+        </Box>
+        <Box
+          display={{ xs: "flex", sm: "flex", md: "block" }}
+          flexDirection={{ xs: "row", sm: "row", md: "column" }}
+          flexWrap={"wrap"}
+          gap={1}
+        >
           {chartData.map((item, i) => (
             <Box key={i} display="flex" alignItems="center" mb={1}>
               <Box

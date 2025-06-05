@@ -38,7 +38,7 @@ const sources = [
     name: "Adams",
     type: "Retailer",
     ciScore: 14.9,
-    grade: "CUSTOM",
+    grade: "NATIONAL",
     lat: 44.1,
     lon: -99.1,
     color: "#DC6B19", // orange ring
@@ -99,11 +99,11 @@ const stateAbbr = {
   56: "WY",
 };
 
-const SourcingOpportunitiesMap = () => {
+const SourcingOpportunitiesMap = ({ data }) => {
   const svgRef = useRef();
   const [view, setView] = useState("heatmap");
   const [zoomLevel, setZoomLevel] = useState(1);
-
+  console.log("data", data);
   useEffect(() => {
     const width = 600;
     const height = 400;
@@ -166,11 +166,12 @@ const SourcingOpportunitiesMap = () => {
           .append("path")
           .attr("fill", (d) => {
             if (view === "heatmap") return "#eee";
-            const stateSources = sources.filter(
+            const stateSources = data.length >0 && data.filter(
               (s) =>
-                projection([s.lon, s.lat]) && d3.geoContains(d, [s.lon, s.lat])
+                projection([s.longitude, s.latitude]) &&
+                d3.geoContains(d, [s.longitude, s.latitude])
             );
-            const avgCI = d3.mean(stateSources, (s) => s.ciScore) || 0;
+            const avgCI = d3.mean(stateSources, (s) => s.ci_score) || 0;
             return ciScale(avgCI);
           })
           .attr("stroke", "#fff")
@@ -185,18 +186,18 @@ const SourcingOpportunitiesMap = () => {
           .attr("y", (d) => path.centroid(d)[1])
           .attr("text-anchor", "middle")
           .attr("dy", "0.35em")
-          .attr("font-size", "10px")
+          .attr("font-size", "6px")
           .attr("fill", "#333")
           .style("pointer-events", "none");
 
         if (view === "mysources") {
           g.selectAll("g.pin")
-            .data(sources)
+            .data(data)
             .enter()
             .append("g")
             .attr("class", "pin")
             .attr("transform", (d) => {
-              const coords = projection([d.lon, d.lat]);
+              const coords = projection([d.longitude, d.latitude]);
               return coords ? `translate(${coords[0]}, ${coords[1]})` : null;
             })
             .each(function (d) {
@@ -294,9 +295,9 @@ const SourcingOpportunitiesMap = () => {
       // { label: "71-100+", color: "#7b2d26" },
     ];
     const gradeLegend = [
-      { label: "SOURCE", color: "#7D8F69" },
+      { label: "SOURCE", color: "#800000" },
+      { label: "NATIONAL", color: "#257d43" },
       { label: "CUSTOM", color: "#F4C430" },
-      { label: "NATIONAL", color: "#DC6B19" },
       { label: "NO SCORE", color: "#ccc" },
     ];
     const source = [
@@ -423,8 +424,8 @@ const SourcingOpportunitiesMap = () => {
                     mb: 0.5,
                   }}
                 >
-                   {s.customIcon}
-                                <Typography variant="caption">{s.label}</Typography>
+                  {s.customIcon}
+                  <Typography variant="caption">{s.label}</Typography>
                 </Box>
               ))}
             </Box>
@@ -500,7 +501,7 @@ const SourcingOpportunitiesMap = () => {
 
       {view === "heatmap" && (
         <Typography sx={{ fontSize: 14, mb: 1 }}>
-          No heat map information is available.{" "}
+          No heat map information is available.
           <Typography
             component="span"
             style={{
@@ -540,7 +541,7 @@ const SourcingOpportunitiesMap = () => {
           borderRadius: 2,
         }}
       >
-        <svg ref={svgRef} width="100%" height="500px" />
+        <svg ref={svgRef} width="100%" height="600px" />
         {/* Zoom Controls */}
         <Box
           position="absolute"

@@ -6,27 +6,33 @@ import ContractsByCIScoreCard from "../components/ContractsByCIScoreCard";
 import DeliveryTable from "./DeliveryTable";
 
 const DashboardBottomComponent = ({ data }) => {
+  const plantTableData = data?.plantsCi;
+  console.log("plantTableData", plantTableData);
   const levelColors = {
-    'Grower': '#8B0000',
-    'Retailer': '#A0522D',
-    'National': '#D2691E',
-    'Custom': '#DAA520',
-    'No Score Grower': '#F4A300',
-    'No Score Retailer': '#FF6347',
+    Grower: "#8B0000",
+    Retailer: "#A0522D",
+    National: "#D2691E",
+    Custom: "#DAA520",
+    "No Score Grower": "#F4A300",
+    "No Score Retailer": "#FF6347",
   };
 
-  const deliveredData = (data?.contract_ci_score_level_delivered || []).map(item => ({
+  const deliveredData = (
+    data?.contractsCi?.contract_ci_score_level_delivered || []
+  ).map((item) => ({
     label: item.nameidtype,
     value: item.total_delivered || 0,
     ciscore: item.ci_score || 0,
-    color: levelColors[item.nameidtype] || '#ccc',
+    color: levelColors[item.nameidtype] || "#ccc",
   }));
 
-  const pendingData = (data?.contract_ci_score_level_pending || []).map(item => ({
+  const pendingData = (
+    data?.contractsCi?.contract_ci_score_level_pending || []
+  ).map((item) => ({
     label: item.nameidtype,
     value: item.total_pending || 0,
     ciscore: item.ci_score || 0,
-    color: levelColors[item.nameidtype] || '#ccc',
+    color: levelColors[item.nameidtype] || "#ccc",
   }));
 
   return (
@@ -34,21 +40,26 @@ const DashboardBottomComponent = ({ data }) => {
       <Grid container spacing={2}>
         {/* Operational Score Card */}
         <Grid item xs={12} sm={6} md={6}>
-        <BushelsByCIScoreCard deliveredData={deliveredData} pendingData={pendingData} />
-        
+          <BushelsByCIScoreCard
+            deliveredData={deliveredData}
+            pendingData={pendingData}
+          />
         </Grid>
 
         {/* Bushels By CI Score Card */}
         <Grid item xs={12} sm={6} md={6}>
-            <OperationalScoreCard />
+          <OperationalScoreCard />
         </Grid>
 
         {/* Contracts By CI Score Card */}
         <Grid item xs={12} sm={6} md={6}>
-          <ContractsByCIScoreCard deliveredData={deliveredData} pendingData={pendingData} />
+          <ContractsByCIScoreCard
+            deliveredData={deliveredData}
+            pendingData={pendingData}
+          />
         </Grid>
         <Grid item xs={12} sm={6} md={6}>
-          <DeliveryTable />
+          <DeliveryTable plantTableData={plantTableData} />
         </Grid>
       </Grid>
     </Box>

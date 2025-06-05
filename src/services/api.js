@@ -48,6 +48,81 @@ export async function fetchDashboardData() {
   }
   return response.json();
 }
+// Dashboard API
+export async function fetchDashboardSummaryMetrics() {
+  const response = await fetch(`${API_BASE}/dashboard/summary-metrics`, {
+    method: "GET",
+    credentials: "include", // include cookies for auth
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to load dashboard data");
+  }
+  return response.json();
+}
+// Dashboard API
+export async function fetchDashboardContractsCi() {
+  const response = await fetch(`${API_BASE}/dashboard/contract-ci-score-level`, {
+    method: "GET",
+    credentials: "include", // include cookies for auth
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to load dashboard data");
+  }
+  return response.json();
+}
+
+export async function fetchDashboardPlantsCi() {
+  const response = await fetch(`${API_BASE}/dashboard/plants-ci-score-level`, {
+    method: "GET",
+    credentials: "include", // include cookies for auth
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to load dashboard data");
+  }
+  return response.json();
+}
+
+// my sourcing table
+export async function fetchSourcingMysources() {
+  const response = await fetch(`${API_BASE}/sourcing/sources`, {
+    method: "GET",
+    credentials: "include", // include cookies for auth
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to load dashboard data");
+  }
+  return response.json();
+}
+export async function fetchSourcingOpportunitesMap() {
+  const response = await fetch(`${API_BASE}/sourcing/opportunites-map`, {
+    method: "GET",
+    credentials: "include", // include cookies for auth
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to load dashboard data");
+  }
+  return response.json();
+}
 
 // Users List API (optional example)
 export async function fetchUsers() {

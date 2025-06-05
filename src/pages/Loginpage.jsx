@@ -50,7 +50,7 @@ const handleLogin = async (e) => {
 
     // ✅ Save user role
     setUserrole(userrole);
-console.log("Plant ID:", plantid);
+    console.log("Plant ID:", plantid,userRole);
     console.log("Login successful", plantid);
 
     // ✅ Navigate to dashboard

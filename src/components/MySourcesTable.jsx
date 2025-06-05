@@ -22,11 +22,12 @@ import {
   InputLabel,
   Button,
   IconButton,
+  TablePagination,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import EditIcon from "@mui/icons-material/Edit";
 
-const MySourcesTable = () => {
+const MySourcesTable = ({ data }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [sourceFilter, setSourceFilter] = useState("All Sources");
   const [cropFilter, setCropFilter] = useState("Corn");
@@ -35,109 +36,110 @@ const MySourcesTable = () => {
   const [ciScoreGrade, setCIScoreGrade] = useState("");
   const [searchOpen, setSearchOpen] = useState(false);
   const searchRef = useRef(null);
-
-  const rows = [
-    {
-      source: "Brown Country Elevators",
-      type: "G",
-      bushels: "7,234",
-      percentTotal: "23.1%",
-      authContracts: "98%",
-      ciScore: 13.2,
-      color: "#DC6B19",
-      // color: "#D24545",
-    },
-    {
-      source: "Randal",
-      type: "G",
-      bushels: "7,012",
-      percentTotal: "13.1%",
-      authContracts: "98%",
-      ciScore: 20.1,
-      color: "#7D8F69",
-    },
-    {
-      source: "Hamilton",
-      type: "R",
-      bushels: "7,234",
-      percentTotal: "11.9%",
-      authContracts: "98%",
-      ciScore: 20.1,
-      color: "#7D8F69",
-    },
-    {
-      source: "Adams",
-      type: "R",
-      bushels: "7,234",
-      percentTotal: "10.3%",
-      authContracts: "98%",
-      ciScore: 14.9,
-      color: "#DC6B19",
-    },
-    {
-      source: "Hart LLC",
-      type: "R",
-      bushels: "6,234",
-      percentTotal: "9.1%",
-      authContracts: "98%",
-      ciScore: 11.9,
-      color: "#F4C430",
-    },
-    {
-      source: "Rapid Fall Elevators",
-      type: "G",
-      bushels: "6,012",
-      percentTotal: "8.1%",
-      authContracts: "98%",
-      ciScore: 20.1,
-      color: "#7D8F69",
-    },
-    {
-      source: "Rapid Fall Elevators",
-      type: "G",
-      bushels: "6,012",
-      percentTotal: "7.1%",
-      authContracts: "98%",
-      ciScore: 20.1,
-      color: "#7D8F69",
-    },
-    {
-      source: "Rapid Fall Elevators",
-      type: "R",
-      bushels: "6,012",
-      percentTotal: "5.1%",
-      authContracts: "98%",
-      ciScore: 20.1,
-      color: "#7D8F69",
-    },
-    {
-      source: "Rapid Fall Elevators",
-      type: "G",
-      bushels: "6,012",
-      percentTotal: "23.1%",
-      authContracts: "98%",
-      ciScore: 20.1,
-      color: "#7D8F69",
-    },
-    {
-      source: "Rapid Fall Elevators",
-      type: "G",
-      bushels: "6,012",
-      percentTotal: "23.1%",
-      authContracts: "98%",
-      ciScore: 20.1,
-      color: "#7D8F69",
-    },
-    {
-      source: "Rapid Fall Elevators",
-      type: "G",
-      bushels: "6,012",
-      percentTotal: "23.1%",
-      authContracts: "98%",
-      ciScore: 20.1,
-      color: "#7D8F69",
-    },
-  ];
+  console.log("data", data);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  // const rows = [
+  //   {
+  //     source: "Brown Country Elevators",
+  //     type: "G",
+  //     bushels: "7,234",
+  //     percentTotal: "23.1%",
+  //     authContracts: "98%",
+  //     ciScore: 13.2,
+  //     color: "#DC6B19",
+  //   },
+  //   {
+  //     source: "Randal",
+  //     type: "G",
+  //     bushels: "7,012",
+  //     percentTotal: "13.1%",
+  //     authContracts: "98%",
+  //     ciScore: 20.1,
+  //     color: "#7D8F69",
+  //   },
+  //   {
+  //     source: "Hamilton",
+  //     type: "R",
+  //     bushels: "7,234",
+  //     percentTotal: "11.9%",
+  //     authContracts: "98%",
+  //     ciScore: 20.1,
+  //     color: "#7D8F69",
+  //   },
+  //   {
+  //     source: "Adams",
+  //     type: "R",
+  //     bushels: "7,234",
+  //     percentTotal: "10.3%",
+  //     authContracts: "98%",
+  //     ciScore: 14.9,
+  //     color: "#DC6B19",
+  //   },
+  //   {
+  //     source: "Hart LLC",
+  //     type: "R",
+  //     bushels: "6,234",
+  //     percentTotal: "9.1%",
+  //     authContracts: "98%",
+  //     ciScore: 11.9,
+  //     color: "#F4C430",
+  //   },
+  //   {
+  //     source: "Rapid Fall Elevators",
+  //     type: "G",
+  //     bushels: "6,012",
+  //     percentTotal: "8.1%",
+  //     authContracts: "98%",
+  //     ciScore: 20.1,
+  //     color: "#7D8F69",
+  //   },
+  //   {
+  //     source: "Rapid Fall Elevators",
+  //     type: "G",
+  //     bushels: "6,012",
+  //     percentTotal: "7.1%",
+  //     authContracts: "98%",
+  //     ciScore: 20.1,
+  //     color: "#7D8F69",
+  //   },
+  //   {
+  //     source: "Rapid Fall Elevators",
+  //     type: "R",
+  //     bushels: "6,012",
+  //     percentTotal: "5.1%",
+  //     authContracts: "98%",
+  //     ciScore: 20.1,
+  //     color: "#7D8F69",
+  //   },
+  //   {
+  //     source: "Rapid Fall Elevators",
+  //     type: "G",
+  //     bushels: "6,012",
+  //     percentTotal: "23.1%",
+  //     authContracts: "98%",
+  //     ciScore: 20.1,
+  //     color: "#7D8F69",
+  //   },
+  //   {
+  //     source: "Rapid Fall Elevators",
+  //     type: "G",
+  //     bushels: "6,012",
+  //     percentTotal: "23.1%",
+  //     authContracts: "98%",
+  //     ciScore: 20.1,
+  //     color: "#7D8F69",
+  //   },
+  //   {
+  //     source: "Rapid Fall Elevators",
+  //     type: "G",
+  //     bushels: "6,012",
+  //     percentTotal: "23.1%",
+  //     authContracts: "98%",
+  //     ciScore: 20.1,
+  //     color: "#7D8F69",
+  //   },
+  // ];
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -172,8 +174,16 @@ const MySourcesTable = () => {
   const handleSave = () => {
     handleClose();
   };
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
 
-  const filteredRows = rows.filter((row) => {
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  const filteredRows = (data || []).filter((row) => {
     const matchesSearch = row.source
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
@@ -181,6 +191,25 @@ const MySourcesTable = () => {
       sourceFilter === "All Sources" || row.source === sourceFilter;
     return matchesSearch && matchesSource;
   });
+
+  const paginatedRows = filteredRows.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage
+  );
+  // const filteredRows = data.filter((row) => {
+  //   const matchesSearch = row.source
+  //     .toLowerCase()
+  //     .includes(searchTerm.toLowerCase());
+  //   const matchesSource =
+  //     sourceFilter === "All Sources" || row.source === sourceFilter;
+  //   return matchesSearch && matchesSource;
+  // });
+ // Helper to format "percent_of_total" as a percentage string
+  const formatPercent = (decimalString) => {
+    const num = parseFloat(decimalString);
+    if (isNaN(num)) return "-";
+    return (num * 100).toFixed(2) + "%";
+  };
 
   return (
     <>
@@ -191,11 +220,17 @@ const MySourcesTable = () => {
           alignItems="center"
           mb={2}
         >
-          <Typography variant="h6" fontWeight="bold" sx={{ fontSize: "18px" }}>
+          <Typography variant="h6" fontWeight="bold" sx={{ fontSize: "16px" }}>
             My Sources
           </Typography>
 
-          <Box display="flex" alignItems="center" gap={1} flexWrap={'wrap'} justifyContent={'end'}>
+          <Box
+            display="flex"
+            alignItems="center"
+            gap={1}
+            flexWrap={"wrap"}
+            justifyContent={"end"}
+          >
             <Box ref={searchRef}>
               {searchOpen ? (
                 <TextField
@@ -232,7 +267,7 @@ const MySourcesTable = () => {
               value={sourceFilter}
               onChange={(e) => setSourceFilter(e.target.value)}
               sx={{
-                width: { xs: 80, sm: 130 ,md:130},
+                width: { xs: 80, sm: 130, md: 130 },
                 height: 32,
                 border: "1px solid #9EA9A3",
                 borderRadius: "6px",
@@ -240,7 +275,7 @@ const MySourcesTable = () => {
               }}
             >
               <MenuItem value="All Sources">All Sources</MenuItem>
-              {[...new Set(rows.map((r) => r.source))].map((source) => (
+              {[...new Set((data || []).map((r) => r.source))].map((source) => (
                 <MenuItem key={source} value={source}>
                   {source}
                 </MenuItem>
@@ -303,7 +338,7 @@ const MySourcesTable = () => {
               </TableHead>
 
               <TableBody>
-                {filteredRows.map((row, idx) => (
+                {paginatedRows.map((row, idx) => (
                   <TableRow key={idx} hover>
                     <TableCell
                       sx={{ fontSize: { xs: "10px", sm: "10px", md: "12px" } }}
@@ -323,12 +358,12 @@ const MySourcesTable = () => {
                     <TableCell
                       sx={{ fontSize: { xs: "10px", sm: "10px", md: "12px" } }}
                     >
-                      {row.percentTotal}
+                      {formatPercent(row.percent_of_total)}
                     </TableCell>
                     <TableCell
                       sx={{ fontSize: { xs: "10px", sm: "10px", md: "12px" } }}
                     >
-                      {row.authContracts}
+                      {row.authContracts || "-"}
                     </TableCell>
                     <TableCell
                       sx={{ fontSize: { xs: "10px", sm: "10px", md: "12px" } }}
@@ -347,7 +382,7 @@ const MySourcesTable = () => {
                             fontSize: { xs: "10px", sm: "10px", md: "12px" },
                           }}
                         >
-                          {row.ciScore}
+                          {row.ci_score_per_MJ}
                         </Typography>
                       </Box>
                     </TableCell>
@@ -364,6 +399,32 @@ const MySourcesTable = () => {
               </TableBody>
             </Table>
           </TableContainer>
+          <TablePagination
+            component="div"
+            count={filteredRows.length}
+            page={page}
+            onPageChange={handleChangePage}
+            rowsPerPage={rowsPerPage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            rowsPerPageOptions={[10, 15, 20]}
+            showFirstButton={true}
+            showLastButton={true}
+            sx={{
+              flexWrap: "wrap",
+              justifyContent: "center",
+              display: "flex",
+              gap: 1,
+              fontSize: { xs: "12px", sm: "14px" },
+              ".MuiTablePagination-toolbar": {
+                flexWrap: "wrap",
+                justifyContent: "center",
+              },
+              ".MuiTablePagination-selectLabel, .MuiTablePagination-displayedRows":
+                {
+                  margin: { xs: "4px 0", sm: "0" },
+                },
+            }}
+          />
         </Box>
       </Paper>
 
@@ -389,24 +450,35 @@ const MySourcesTable = () => {
                 />
               </Grid>
 
-              <Grid container spacing={4} sx={{ pl: 3 }}>
-                <Grid item xs={12} md={3} sx={{ mt: 1 }}>
-                  <Typography noWrap>
-                    <strong>Type:</strong> {selectedRow.type}
+              <Grid container spacing={4} sx={{ pl: 3, pt: 1 ,}}>
+                <Grid item xs={12} md={3} >
+                  <Typography  fontWeight={"bold"}>
+                    Type:
+                 </Typography>
+                  <Typography>
+                    {selectedRow.type}
                   </Typography>
                 </Grid>
 
                 <Grid item xs={12} md={3}>
+                  <Typography fontWeight={"bold"}>
+                   Commodity:
+                  </Typography>
                   <Typography>
-                    <strong>Commodity:</strong> {cropFilter}
+                     {cropFilter}
                   </Typography>
                 </Grid>
 
                 <Grid item xs={12} md={6}>
                   <Typography
+                    sx={{ fontWeight: "bold", whiteSpace: "pre-wrap" }}
+                  >
+                    Address:
+                  </Typography>
+                  <Typography
                     sx={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}
                   >
-                    <strong>Address:</strong> {selectedRow.address || "N/A"}
+                    {selectedRow.address || "N/A"}
                   </Typography>
                 </Grid>
               </Grid>
@@ -419,7 +491,7 @@ const MySourcesTable = () => {
                     onChange={(e) => setCIScoreGrade(e.target.value)}
                     label="CI Score Grade level"
                   >
-                    <MenuItem value="">No Score</MenuItem>
+                    <MenuItem value="No Score">No Score</MenuItem>
                     <MenuItem value="Grower">Grower</MenuItem>
                     <MenuItem value="Retailer">Retailer</MenuItem>
                     <MenuItem value="National">National</MenuItem>
@@ -429,17 +501,19 @@ const MySourcesTable = () => {
               </Grid>
 
               {/* Two new fields */}
+                {ciScoreGrade === "Custom" && (
+                  <>
               <Grid item xs={12}>
                 <TextField
                   fullWidth
                   size="small"
                   type="number"
                   label="Custom Ci Score *"
-                  placeholder="Enter value for Field 1"
+                  placeholder="Enter value"
                   variant="outlined"
                 />
               </Grid>
-              {ciScoreGrade === "Custom" && (
+             
                 <Grid item xs={12}>
                   <TextField
                     fullWidth
@@ -449,6 +523,7 @@ const MySourcesTable = () => {
                     variant="outlined"
                   />
                 </Grid>
+                </>
               )}
 
               <Grid item xs={12}>
