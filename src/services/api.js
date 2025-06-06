@@ -10,13 +10,12 @@ export async function loginUser(credentials) {
     },
     body: JSON.stringify(credentials),
   });
-
+const data = await response.json();
   if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.message || "Login failed");
+    throw new Error(data.message || "Login failed");
   }
 
-  return response.json();
+  return data;
 }
 
 // Protected API
@@ -129,6 +128,21 @@ export async function fetchUsers() {
   const response = await fetch(`${API_BASE}/users`);
   if (!response.ok) throw new Error("Failed to load users");
   return response.json();
+}
+
+// Business Rules API 
+export async function fetchBusinessRules() {
+  const response = await fetch(`${API_BASE}/setting/business-rules`, {
+    method: "GET",
+    credentials: "include", // include cookies for auth
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  if (!response.ok) throw new Error("Failed to load business rules");
+  const data = await response.json();
+  console.log("data api ", data);
+  return data;
 }
 
 // manual inputs API

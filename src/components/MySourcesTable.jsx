@@ -210,6 +210,11 @@ const MySourcesTable = ({ data }) => {
     if (isNaN(num)) return "-";
     return (num * 100).toFixed(2) + "%";
   };
+const formatBushelsThousands = (value) => {
+  const num = parseFloat(value);
+  if (isNaN(num)) return "-";
+  return (num / 1000).toFixed(2);
+};
 
   return (
     <>
@@ -316,7 +321,7 @@ const MySourcesTable = ({ data }) => {
                   <TableCell
                     sx={{ fontSize: { xs: "10px", sm: "10px", md: "12px" } }}
                   >
-                    Bushels
+                    Bushels (1000s)
                   </TableCell>
                   <TableCell
                     sx={{ fontSize: { xs: "10px", sm: "10px", md: "12px" } }}
@@ -343,24 +348,24 @@ const MySourcesTable = ({ data }) => {
                     <TableCell
                       sx={{ fontSize: { xs: "10px", sm: "10px", md: "12px" } }}
                     >
-                      {row.source}
+                      {row.source || "-"}
                     </TableCell>
                     <TableCell
                       sx={{ fontSize: { xs: "10px", sm: "10px", md: "12px" } }}
                     >
-                      {row.type}
+                      {row.type || "-"}
                     </TableCell>
                     <TableCell
                       sx={{ fontSize: { xs: "10px", sm: "10px", md: "12px" } }}
                     >
-                      {row.bushels}
+                        {formatBushelsThousands(row.bushels)|| "-"}
                     </TableCell>
                     <TableCell
                       sx={{ fontSize: { xs: "10px", sm: "10px", md: "12px" } }}
                     >
-                      {formatPercent(row.percent_of_total)}
+                      {formatPercent(row.percent_of_total)|| "-"}
                     </TableCell>
-                    <TableCell
+                    <TableCell align="center"
                       sx={{ fontSize: { xs: "10px", sm: "10px", md: "12px" } }}
                     >
                       {row.authContracts || "-"}
@@ -382,7 +387,7 @@ const MySourcesTable = ({ data }) => {
                             fontSize: { xs: "10px", sm: "10px", md: "12px" },
                           }}
                         >
-                          {row.ci_score_per_MJ}
+                          {row.ci_score_per_MJ || "-"}
                         </Typography>
                       </Box>
                     </TableCell>

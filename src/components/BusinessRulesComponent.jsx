@@ -13,41 +13,91 @@ import {
   TextField,
   InputBase,
   TablePagination,
+  CircularProgress,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Close";
 import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutlined";
 import SearchIcon from "@mui/icons-material/Search";
+import { useLocation } from "react-router-dom";
+import { useDashboard } from "../context/DashboardContext";
 
 const BusinessRulesComponent = () => {
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
-
-  const [rows, setRows] = useState([
-    {
-      gradelevel: "National",
-      civalue: "29.7",
-      lastupdatedon: "01/01/2023",
-      updatedby: "John Doe",
-    },
-    {
-      gradelevel: "Retailer1",
-      civalue: "30.00",
-      lastupdatedon: "01/01/2023",
-      updatedby: "John Doe",
-    },
-    {
-      gradelevel: "Retailer2",
-      civalue: "40.00",
-      lastupdatedon: "01/01/2023",
-      updatedby: "John Doe",
-    },
-  ]);
-
+  const location = useLocation();
+  const { businessRules, loadBusinessRules } = useDashboard();
+  const user = location.state?.email || "guest@example.com";
+  const [rows, setRows] = useState([]);
   const [editIdx, setEditIdx] = useState(-1);
   const [editValue, setEditValue] = useState("");
   const [searchText, setSearchText] = useState("");
+
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [loading, setLoading] = useState(false);
+  console.log("businessRules", businessRules);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        if (
+          !businessRules ||
+          businessRules.length === 0 ||
+          businessRules === null
+        ) {
+          await loadBusinessRules(); // Loads and updates context
+        }
+      } catch (error) {
+        console.error("Error loading business rules:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+  // const [rows, setRows] = useState([
+
+  //   {
+  //     gradelevel: "National",
+  //     civalue: "29.7",
+  //     lastupdatedon: "01/01/2023",
+  //     updatedby: "John Doe",
+  //   },
+  //   {
+  //     gradelevel: "Retailer1",
+  //     civalue: "30.00",
+  //     lastupdatedon: "01/01/2023",
+  //     updatedby: "John Doe",
+  //   },
+  //   {
+  //     gradelevel: "Retailer2",
+  //     civalue: "40.00",
+  //     lastupdatedon: "01/01/2023",
+  //     updatedby: "John Doe",
+  //   },
+  // ]);
+  useEffect(() => {
+    if (businessRules && businessRules.length > 0) {
+      const manualRow = {
+  gradelevel: "National",
+  civalue: "29.7",
+  lastupdatedon: "-",
+  updatedby: user || "-",
+};
+      const formattedRows = [
+  manualRow,
+  ...businessRules.map((rule) => ({
+    gradelevel: rule.Name || "-",
+    civalue: "-",
+    lastupdatedon: "-",
+    updatedby: user || "-",
+  })),
+];
+      setRows(formattedRows);
+    }
+  }, [businessRules]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -60,12 +110,22 @@ const BusinessRulesComponent = () => {
 
   const handleEdit = (idx) => {
     setEditIdx(idx);
-    setEditValue(rows[idx].civalue);
+    // setEditValue(rows[idx].civalue);
+    setEditValue(
+      rows[page * rowsPerPage + idx].civalue !== "-"
+        ? rows[page * rowsPerPage + idx].civalue
+        : ""
+    );
   };
 
   const handleSave = () => {
     const updatedRows = [...rows];
-    updatedRows[editIdx].civalue = editValue;
+    updatedRows[editIdx] = {
+      ...updatedRows[editIdx],
+      civalue: editValue || "-",
+      lastupdatedon: new Date().toLocaleDateString(),
+      updatedby: user || "-",
+    };
     setRows(updatedRows);
     setEditIdx(-1);
     setEditValue("");
@@ -139,57 +199,71 @@ const BusinessRulesComponent = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {paginatedRows.map((row, idx) => (
-              <TableRow key={page * rowsPerPage + idx}>
-                <TableCell>{row.gradelevel}</TableCell>
-                <TableCell>
-                  {editIdx === idx ? (
-                    <TextField
-                      size="small"
-                      value={editValue}
-                      onChange={(e) => setEditValue(e.target.value)}
-                      type="number"
-                      inputProps={{ step: "0.1" }}
-                    />
-                  ) : (
-                    row.civalue
-                  )}
-                </TableCell>
-                <TableCell>{row.lastupdatedon}</TableCell>
-                <TableCell>{row.updatedby}</TableCell>
-                <TableCell align="center">
-                  {editIdx === idx ? (
-                    <>
-                      <IconButton
-                        color="primary"
-                        onClick={handleSave}
-                        size="small"
-                      >
-                        <SaveIcon fontSize="small" />
-                      </IconButton>
-                      <IconButton
-                        color="error"
-                        onClick={handleCancel}
-                        size="small"
-                      >
-                        <CancelIcon fontSize="small" />
-                      </IconButton>
-                    </>
-                  ) : (
-                    <IconButton
-                      color="primary"
-                      onClick={() => handleEdit(rows.indexOf(row))}
-                      size="small"
-                    >
-                      <ModeEditOutlineOutlinedIcon
-                        sx={{ color: "#000000" }}
-                        fontSize="small"
-                      />
-                    </IconButton>
-                  )}
+            {loading ? (
+              <TableRow>
+                <TableCell colSpan={12} align="center">
+                  <CircularProgress />
                 </TableCell>
               </TableRow>
-            ))}
+            ) : paginatedRows.length > 0 ? (
+              paginatedRows.map((row, idx) => (
+                <TableRow key={page * rowsPerPage + idx}>
+                  <TableCell>{row.gradelevel}</TableCell>
+                  <TableCell>
+                    {editIdx === page * rowsPerPage + idx ? (
+                      <TextField
+                        size="small"
+                        value={editValue}
+                        onChange={(e) => setEditValue(e.target.value)}
+                        type="number"
+                        inputProps={{ step: "0.1" }}
+                      />
+                    ) : (
+                      row.civalue
+                    )}
+                  </TableCell>
+                  <TableCell>{row.lastupdatedon}</TableCell>
+                  <TableCell>{row.updatedby}</TableCell>
+                  <TableCell align="center">
+                    {editIdx === page * rowsPerPage + idx ? (
+                      <>
+                        <IconButton
+                          color="primary"
+                          onClick={handleSave}
+                          size="small"
+                        >
+                          <SaveIcon fontSize="small" />
+                        </IconButton>
+                        <IconButton
+                          color="error"
+                          onClick={handleCancel}
+                          size="small"
+                        >
+                          <CancelIcon fontSize="small" />
+                        </IconButton>
+                      </>
+                    ) : (
+                      <IconButton
+                        color="primary"
+                        onClick={() => handleEdit(page * rowsPerPage + idx)}
+                        size="small"
+                      >
+                        <ModeEditOutlineOutlinedIcon
+                          sx={{ color: "#000000" }}
+                          fontSize="small"
+                        />
+                      </IconButton>
+                    )}
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={12} align="center">
+                  No data available
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </TableContainer>

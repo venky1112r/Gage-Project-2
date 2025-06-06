@@ -30,7 +30,7 @@ const ContractsChart = ({ data, view }) => {
       top: isMobile ? 40 : 60,
       right: isMobile ? 30 : 60,
       bottom: isMobile ? 50 : 60,
-      left: isMobile ? 40 : 60,
+      left: isMobile ? 50 : 60,
     };
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
@@ -42,67 +42,67 @@ const ContractsChart = ({ data, view }) => {
 
     svg.attr("width", width).attr("height", height);
 
-    const legend = svg
-      .append("g")
-      .attr("transform", `translate(${margin.left}, ${isMobile ? 10 : 20})`);
+    // const legend = svg
+    //   .append("g")
+    //   .attr("transform", `translate(${margin.left}, ${isMobile ? 10 : 20})`);
 
-    // Delivered Legend
-    legend
-      .append("rect")
-      .attr("x", 0)
-      .attr("y", 0)
-      .attr("width", 14)
-      .attr("height", 14)
-      .attr("fill", "#ADC178");
+    // // Delivered Legend
+    // legend
+    //   .append("rect")
+    //   .attr("x", 0)
+    //   .attr("y", 0) 
+    //   .attr("width", 14)
+    //   .attr("height", 14)
+    //   .attr("fill", "#ADC178");
 
-    legend
-      .append("text")
-      .attr("x", 20)
-      .attr("y", 11)
-      .attr("font-size", isMobile ? "10px" : "12px")
-      .text("DELIVERED BUSHELS");
+    // legend
+    //   .append("text")
+    //   .attr("x", 20)
+    //   .attr("y", 11)
+    //   .attr("font-size", isMobile ? "10px" : "12px")
+    //   .text("DELIVERED BUSHELS");
 
-    // Pending Legend (conditionally)
-    if (showPending) {
-      legend
-        .append("rect")
-        .attr("x", isMobile ? 0 : 180)
-        .attr("y", isMobile ? 20 : 0)
-        .attr("width", 14)
-        .attr("height", 14)
-        .attr("fill", "#ccc");
+    // // Pending Legend (conditionally)
+    // if (showPending) {
+    //   legend
+    //     .append("rect")
+    //     .attr("x", isMobile ? 0 : 180)
+    //     .attr("y", isMobile ? 20 : 0)
+    //     .attr("width", 14)
+    //     .attr("height", 14)
+    //     .attr("fill", "#ccc");
 
-      legend
-        .append("text")
-        .attr("x", isMobile ? 20 : 200)
-        .attr("y", isMobile ? 31 : 11)
-        .attr("font-size", isMobile ? "10px" : "12px")
-        .text("PENDING BUSHELS");
-    }
+    //   legend
+    //     .append("text")
+    //     .attr("x", isMobile ? 20 : 200)
+    //     .attr("y", isMobile ? 31 : 11)
+    //     .attr("font-size", isMobile ? "10px" : "12px")
+    //     .text("PENDING BUSHELS");
+    // }
 
-    // CI Score Legend
-    legend
-      .append("line")
-      .attr("x1", isMobile ? 0 : 370)
-      .attr("y1", isMobile ? 50 : 8)
-      .attr("x2", isMobile ? 20 : 390)
-      .attr("y2", isMobile ? 50 : 8)
-      .attr("stroke", "#7F4F24")
-      .attr("stroke-width", 2);
+    // // CI Score Legend
+    // legend
+    //   .append("line")
+    //   .attr("x1", isMobile ? 0 : 370)
+    //   .attr("y1", isMobile ? 50 : 8)
+    //   .attr("x2", isMobile ? 20 : 390)
+    //   .attr("y2", isMobile ? 50 : 8)
+    //   .attr("stroke", "#7F4F24")
+    //   .attr("stroke-width", 2);
 
-    legend
-      .append("circle")
-      .attr("cx", isMobile ? 10 : 380)
-      .attr("cy", isMobile ? 50 : 8)
-      .attr("r", 3)
-      .attr("fill", "#7F4F24");
+    // legend
+    //   .append("circle")
+    //   .attr("cx", isMobile ? 10 : 380)
+    //   .attr("cy", isMobile ? 50 : 8)
+    //   .attr("r", 3)
+    //   .attr("fill", "#7F4F24");
 
-    legend
-      .append("text")
-      .attr("x", isMobile ? 30 : 400)
-      .attr("y", isMobile ? 55 : 13)
-      .attr("font-size", isMobile ? "10px" : "12px")
-      .text("AVERAGE CI SCORE");
+    // legend
+    //   .append("text")
+    //   .attr("x", isMobile ? 30 : 400)
+    //   .attr("y", isMobile ? 55 : 13)
+    //   .attr("font-size", isMobile ? "10px" : "12px")
+    //   .text("AVERAGE CI SCORE");
 
     const g = svg
       .append("g")
@@ -125,13 +125,13 @@ const ContractsChart = ({ data, view }) => {
       .scaleBand()
       .domain(gradeOrder)
       .range([0, innerWidth])
-      .padding(0.3);
+      .padding(isMobile ? 0.1 : 0.3);
 
     const x1 = d3
       .scaleBand()
       .domain(["delivered", "pending"])
       .range([0, x0.bandwidth()])
-      .padding(0.2);
+      .padding(isMobile ? 0.1 : 0.2);
 
     const maxTotal = d3.max(orderedData, (d) =>
       Math.max(d.bushels || 0, showPending ? d.pending || 0 : 0)
@@ -162,7 +162,7 @@ const ContractsChart = ({ data, view }) => {
       .attr("x", (d) => x0(d.grade) + x1("delivered") + x1.bandwidth() / 2)
       .attr("y", (d) => yLeft(d.bushels) - 5)
       .attr("text-anchor", "middle")
-      .attr("font-size", isMobile ? "10px" : "12px")
+      .attr("font-size", isMobile ? "8px" : "12px")
       .attr("font-weight", "bold");
 
     // Bars - Pending (if applicable)
@@ -187,7 +187,7 @@ const ContractsChart = ({ data, view }) => {
         .attr("x", (d) => x0(d.grade) + x1("pending") + x1.bandwidth() / 2)
         .attr("y", (d) => yLeft(d.pending || 0) - 5)
         .attr("text-anchor", "middle")
-        .attr("font-size", isMobile ? "10px" : "12px")
+        .attr("font-size", isMobile ? "8px" : "12px")
         .attr("fill", "#333")
         .attr("font-weight", "bold");
     }
@@ -307,7 +307,42 @@ const ContractsChart = ({ data, view }) => {
         height:"100%"
       }}
     >
+       {/* External Legend */}
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "start",
+        alignItems: "center",
+        flexWrap: "wrap",
+        gap: "20px",
+        marginBottom: "10px",
+        fontSize: "12px",
+        fontWeight: "bold",
+        paddingLeft: "10px"
+      }}
+    >
+      <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+        <div style={{ width: 14, height: 14, backgroundColor: "#ADC178" }}></div>
+        <span>DELIVERED BUSHELS</span>
+      </div>
+      {view === "pending" && (
+        <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+          <div style={{ width: 14, height: 14, backgroundColor: "#ccc" }}></div>
+          <span>PENDING BUSHELS</span>
+        </div>
+      )}
+      <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+        <svg width="20" height="10">
+          <line x1="0" y1="5" x2="20" y2="5" stroke="#7F4F24" strokeWidth="2" />
+          <circle cx="10" cy="5" r="3" fill="#7F4F24" />
+        </svg>
+        <span>AVERAGE CI SCORE</span>
+      </div>
+    </div>
+      {/* Chart SVG */}
       <svg ref={svgRef} />
+
+       {/* Tooltip */}
       <div
         ref={tooltipRef}
         style={{

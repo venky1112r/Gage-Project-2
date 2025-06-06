@@ -87,9 +87,27 @@ const CustomersComponent = () => {
     setSelectedCustomer(null);
   };
 
-  const handleResetPassword = () => {
-    alert(`Reset password for ${selectedCustomer.name}`);
-    handleMenuClose();
+  const handleResetPassword = async () => {
+    console.log("selectedCustomer", selectedCustomer.id);
+try {
+    const res = await fetch("/api/reset-password-request", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ customerId: selectedCustomer.id }),
+    });
+
+    if (res.ok) {
+      alert(`Password reset email sent to ${selectedCustomer.name}`);
+    } else {
+      alert("Failed to send reset email.");
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    alert("Something went wrong.");
+  }
+  handleMenuClose();
   };
 
   const handleDelete = () => {

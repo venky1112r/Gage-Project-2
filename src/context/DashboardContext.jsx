@@ -7,6 +7,7 @@ import {
   fetchSourcingMysources,
   fetchSourcingOpportunitesMap,
   fetchManualInputs,
+  fetchBusinessRules,
 } from "../services/api";
 
 const DashboardContext = createContext();
@@ -19,17 +20,8 @@ export const DashboardProvider = ({ children }) => {
   const [mySources, setMySources] = useState(null);
   const [opportunitiesMap, setOpportunitiesMap] = useState(null);
   const [manualInputs, setManualInputs] = useState([]);
+  const [businessRules, setBusinessRules] = useState([]);
 
-  // const loadDashboardData = async () => {
-  //
-  //   try {
-  //     const data = await fetchDashboardData();
-  //     setDashboardData(data);
-  //   } catch (err) {
-  //     console.error("Error fetching dashboard data:", err);
-  //   } finally {
-  //   }
-  // };
 
   const loadSummaryMetrics = async () => {
     
@@ -91,6 +83,17 @@ export const DashboardProvider = ({ children }) => {
     } 
   };
 
+  const loadBusinessRules = async () => {
+
+    try {
+      const data = await fetchBusinessRules();
+      setBusinessRules(data);
+      console.log("data",data);
+    } catch (err) {
+      console.error("Error fetching business rules:", err);
+    }
+  }
+
   return (
     <DashboardContext.Provider
       value={{
@@ -100,12 +103,14 @@ export const DashboardProvider = ({ children }) => {
         mySources,
         opportunitiesMap,
         manualInputs,
+        businessRules,
         loadSummaryMetrics,
         loadContractsCi,
         loadPlantsCi,
         loadMySources,
         loadOpportunitiesMap,
         loadManualInputs,
+        loadBusinessRules
       }}
     >
       {children}

@@ -26,7 +26,7 @@ const OperationalScoreCard = () => {
         </Typography> */}
       </Box>
 
-      <Box display="flex" alignItems="center" gap={5} justifyContent={{xs:'center',md:'space-between'}} flexWrap={'wrap'} flexDirection={{ xs: 'row', md: 'row' } }>
+      <Box display="flex" alignItems="center" gap={5} justifyContent={{xs:'center',sm:'center',md:'space-between'}} flexWrap={'wrap'} flexDirection={{ xs: 'row', md: 'row' } }>
         {/* Left side: Score */}
         <Box display={{xs:'flex',md:'block'}} width={{xs:'100%',md:'auto'}} justifyContent={{xs:'space-between'}}>
           <Typography variant="h3" sx={{ color: '#000000' }}>

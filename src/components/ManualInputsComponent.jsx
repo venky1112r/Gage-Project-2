@@ -15,14 +15,17 @@ import {
   Grid,
   InputAdornment,
   CircularProgress,
+  Alert
 } from "@mui/material";
 import { useLocation } from "react-router-dom";
 import { useDashboard } from "../context/DashboardContext";
-import { saveManualInput } from "../services/api.js";
+import { saveManualInput } from "../services/api.js"; 
 
 const ManualInputsComponent = () => {
   const { manualInputs, loadManualInputs } = useDashboard();
   const [loading, setLoading] = useState(false);
+const [saveSuccess, setSaveSuccess] = useState(false);
+const [saveError, setSaveError] = useState(null);
   console.log("manualInputs", manualInputs);
 
   // ✅ Load manual input data on component mount
@@ -45,25 +48,27 @@ const ManualInputsComponent = () => {
     if (manualInputs && manualInputs.length > 0) {
       const formatted = manualInputs.map((row) => ({
         ...row,
-        createdate: row.createdate
-          ? new Date(row.createdate).toISOString().split("T")[0]
+        fromdate: row.fromdate
+          ? new Date(row.fromdate).toISOString().split("T")[0]
           : "",
-        updateddate: row.updateddate
-          ? new Date(row.updateddate).toISOString().split("T")[0]
+        todate: row.todate
+          ? new Date(row.todate).toISOString().split("T")[0]
           : "",
       }));
-      setRows(formatted);
+     // ✅ Sort by createddate descending (most recent first)
+    formatted.sort((a, b) => new Date(b.createddate) - new Date(a.createddate));
+    setRows(formatted);
     }
   }, [manualInputs]);
 
   const location = useLocation();
-  const email = location.state?.email || "guest@example.com"; // ✅ use email for updatedby
+  const email = location.state?.email || "guest@example.com"; // ✅ use email for createdby
   const [rows, setRows] = useState([]);
   console.log("after use effect rows", rows);
   // const [rows, setRows] = useState([
   //   {
-  //     createdate: "2025-04-01",
-  //     updateddate: "2025-04-30",
+  //     fromdate: "2025-04-01",
+  //     todate: "2025-04-30",
   //     fossilgasused: "12.5",
   //     coalusage: "3.2",
   //     gridelectricusage: "4.1",
@@ -71,12 +76,12 @@ const ManualInputsComponent = () => {
   //     naturalgasrenewable45z: "1.3",
   //     totalbushelsprocessed: "1350000",
   //     totalethanolproduced: "42.8",
-  //     updatedon: "05/10/2025",
-  //     updatedby: "Alice Johnson",
+  //     createddate: "05/10/2025",
+  //     createdby: "Alice Johnson",
   //   },
   //   {
-  //     createdate: "2025-03-01",
-  //     updateddate: "2025-03-31",
+  //     fromdate: "2025-03-01",
+  //     todate: "2025-03-31",
   //     fossilgasused: "11.9",
   //     coalusage: "2.8",
   //     gridelectricusage: "3.9",
@@ -84,12 +89,12 @@ const ManualInputsComponent = () => {
   //      naturalgasrenewable45z: "1.3",
   //     totalbushelsprocessed: "1280000",
   //     totalethanolproduced: "40.2",
-  //     updatedon: "04/09/2025",
-  //     updatedby: "Bob Smith",
+  //     createddate: "04/09/2025",
+  //     createdby: "Bob Smith",
   //   },
   //   {
-  //     createdate: "2025-02-01",
-  //     updateddate: "2025-02-28",
+  //     fromdate: "2025-02-01",
+  //     todate: "2025-02-28",
   //     fossilgasused: "13.1",
   //     coalusage: "3.5",
   //     gridelectricusage: "4.3",
@@ -97,12 +102,12 @@ const ManualInputsComponent = () => {
   //      naturalgasrenewable45z: "1.3",
   //     totalbushelsprocessed: "1400000",
   //     totalethanolproduced: "44.0",
-  //     updatedon: "03/07/2025",
-  //     updatedby: "Clara Lee",
+  //     createddate: "03/07/2025",
+  //     createdby: "Clara Lee",
   //   },
   //   {
-  //     createdate: "2025-02-01",
-  //     updateddate: "2025-02-28",
+  //     fromdate: "2025-02-01",
+  //     todate: "2025-02-28",
   //     fossilgasused: "13.1",
   //     coalusage: "3.5",
   //     gridelectricusage: "4.3",
@@ -110,12 +115,12 @@ const ManualInputsComponent = () => {
   //      naturalgasrenewable45z: "1.3",
   //     totalbushelsprocessed: "1400000",
   //     totalethanolproduced: "44.0",
-  //     updatedon: "03/07/2025",
-  //     updatedby: "Clara Lee",
+  //     createddate: "03/07/2025",
+  //     createdby: "Clara Lee",
   //   },
   //   {
-  //     createdate: "2025-03-01",
-  //     updateddate: "2025-03-31",
+  //     fromdate: "2025-03-01",
+  //     todate: "2025-03-31",
   //     fossilgasused: "11.9",
   //     coalusage: "2.8",
   //     gridelectricusage: "3.9",
@@ -123,12 +128,12 @@ const ManualInputsComponent = () => {
   //      naturalgasrenewable45z: "1.3",
   //     totalbushelsprocessed: "1280000",
   //     totalethanolproduced: "40.2",
-  //     updatedon: "04/09/2025",
-  //     updatedby: "Bob Smith",
+  //     createddate: "04/09/2025",
+  //     createdby: "Bob Smith",
   //   },
   //   {
-  //     createdate: "2025-03-01",
-  //     updateddate: "2025-03-31",
+  //     fromdate: "2025-03-01",
+  //     todate: "2025-03-31",
   //     fossilgasused: "11.9",
   //     coalusage: "2.8",
   //     gridelectricusage: "3.9",
@@ -136,12 +141,12 @@ const ManualInputsComponent = () => {
   //      naturalgasrenewable45z: "1.3",
   //     totalbushelsprocessed: "1280000",
   //     totalethanolproduced: "40.2",
-  //     updatedon: "04/09/2025",
-  //     updatedby: "Bob Smith",
+  //     createddate: "04/09/2025",
+  //     createdby: "Bob Smith",
   //   },
   //   {
-  //     createdate: "2025-02-01",
-  //     updateddate: "2025-02-28",
+  //     fromdate: "2025-02-01",
+  //     todate: "2025-02-28",
   //     fossilgasused: "13.1",
   //     coalusage: "3.5",
   //     gridelectricusage: "4.3",
@@ -149,14 +154,14 @@ const ManualInputsComponent = () => {
   //      naturalgasrenewable45z: "1.3",
   //     totalbushelsprocessed: "1400000",
   //     totalethanolproduced: "44.0",
-  //     updatedon: "03/07/2025",
-  //     updatedby: "Clara Lee",
+  //     createddate: "03/07/2025",
+  //     createdby: "Clara Lee",
   //   },
   // ]);
 
   const [formData, setFormData] = useState({
-    createdate: "",
-    updateddate: "",
+    fromdate: "",
+    todate: "",
     fossilgasused: "",
     coalusage: "",
     gridelectricusage: "",
@@ -177,8 +182,8 @@ const ManualInputsComponent = () => {
   };
 
   const requiredFields = [
-    "createdate",
-    "updateddate",
+    "fromdate",
+    "todate",
     "fossilgasused",
     "coalusage",
     "gridelectricusage",
@@ -200,6 +205,7 @@ const ManualInputsComponent = () => {
   ];
 
   const handleSave = async () => {
+    setLoading(true);
     const errors = {};
     for (const field of requiredFields) {
       if (!formData[field]) {
@@ -220,7 +226,7 @@ const ManualInputsComponent = () => {
 
     const newRow = {
       ...formData,
-      plantid: 1001, // <-- You need to pass a valid plant ID
+      plantid: 1, // <-- You need to pass a valid plant ID
       fossilgasused: Number(formData.fossilgasused),
       coalusage: Number(formData.coalusage),
       gridelectricusage: Number(formData.gridelectricusage),
@@ -232,26 +238,42 @@ const ManualInputsComponent = () => {
         ? Number(formData.convefficiency)
         : undefined,
 
-      updatedby: email,
-      updatedon: new Date().toISOString().split("T")[0], // "2025-06-02T09:30:00.000Z"
+      createdby: email,
+      // createddate: new Date().toISOString().split("T")[0], // "2025-06-02T09:30:00.000Z"
     };
     console.log("newRow", newRow);
     console.log("Sending to API:", JSON.stringify(newRow, null, 2));
 
-    try {
-      await saveManualInput(newRow); // ✅ API call
-      setRows((prev) => [newRow, ...prev]);
-      clearForm();
-    } catch (err) {
-      console.error("Error saving data:", err.message);
-      alert("Failed to save data: " + err.message);
-    }
-  };
+    // ✅ Start loading
+  setLoading(true);
+  setSaveSuccess(false);
+  setSaveError(null);
+
+  try {
+    await saveManualInput(newRow);
+    await loadManualInputs();
+
+    const updatedRows = [newRow, ...rows];
+    updatedRows.sort((a, b) => new Date(b.createddate) - new Date(a.createddate));
+    setRows(updatedRows);
+
+    setSaveSuccess(true);
+    setTimeout(() => setSaveSuccess(false), 3000);
+    clearForm();
+  } catch (err) {
+    console.error("Error saving data:", err.message);
+    setSaveError(err.message);
+    alert("Failed to save data: " + err.message);
+  } finally {
+    // ✅ Stop loading regardless of success/failure
+    setLoading(false);
+  }
+};
 
   const clearForm = () => {
     setFormData({
-      createdate: "",
-      updateddate: "",
+      fromdate: "",
+      todate: "",
       fossilgasused: "",
       coalusage: "",
       gridelectricusage: "",
@@ -271,8 +293,8 @@ const ManualInputsComponent = () => {
   };
 
   const fields = [
-    { label: "From Date", field: "createdate", type: "date", unit: "" },
-    { label: "To Date", field: "updateddate", type: "date", unit: "" },
+    { label: "From Date", field: "fromdate", type: "date", unit: "" },
+    { label: "To Date", field: "todate", type: "date", unit: "" },
     {
       label: "Fossil Natural Gas (NG)",
       field: "fossilgasused",
@@ -381,11 +403,14 @@ const ManualInputsComponent = () => {
 
       <Box sx={{ mt: 2 }}>
         <Button variant="contained" onClick={handleSave} sx={{ mr: 2 }}>
-          Save
+         {loading ? "Saving..." : "Save"}
         </Button>
         <Button variant="outlined" color="primary" onClick={clearForm}>
           Clear
         </Button>
+        {saveSuccess && <Alert severity="success">Saved successfully!</Alert>}
+{saveError && <Alert severity="error">Error: {saveError}</Alert>}
+
       </Box>
 
       <TableContainer component={Paper} sx={{ mt: 3 }}>
@@ -402,8 +427,8 @@ const ManualInputsComponent = () => {
               <TableCell>Natural Gas Renewable - 45z</TableCell>
               <TableCell>Bushels Processed</TableCell>
               <TableCell>Total Ethanol Produced</TableCell>
-              <TableCell>Updated On</TableCell>
-              <TableCell>Updated By</TableCell>
+              <TableCell>Created On</TableCell>
+              <TableCell>Created By</TableCell>
             </TableRow>
           </TableHead>
           <TableBody sx={{ "& td": { textAlign: "center" } }}>
@@ -419,17 +444,17 @@ const ManualInputsComponent = () => {
                 .map((row, idx) => (
                   <TableRow key={idx}>
                     <TableCell>{page * rowsPerPage + idx + 1}</TableCell>
-                    <TableCell>{row.createdate}</TableCell>
-                    <TableCell>{row.updateddate}</TableCell>
-                    <TableCell>{row.fossilgasused}</TableCell>
-                    <TableCell>{row.coalusage}</TableCell>
-                    <TableCell>{row.gridelectricusage}</TableCell>
-                    <TableCell>{row.renewablelectricusage}</TableCell>
-                    <TableCell>{row.naturalgasrenewable45z}</TableCell>
-                    <TableCell>{row.totalbushelsprocessed}</TableCell>
-                    <TableCell>{row.totalethanolproduced}</TableCell>
-                    <TableCell>{row.updatedon}</TableCell>
-                    <TableCell>{row.updatedby}</TableCell>
+                    <TableCell>{row.fromdate || "-"}</TableCell>
+                    <TableCell>{row.todate|| "-"}</TableCell>
+                    <TableCell>{row.fossilgasused|| "-"}</TableCell>
+                    <TableCell>{row.coalusage|| "-"}</TableCell>
+                    <TableCell>{row.gridelectricusage|| "-"}</TableCell>
+                    <TableCell>{row.renewablelectricusage|| "-"}</TableCell>
+                    <TableCell>{row.naturalgasrenewable45z|| "-"}</TableCell>
+                    <TableCell>{row.totalbushelsprocessed|| "-"}</TableCell>
+                    <TableCell>{row.totalethanolproduced|| "-"}</TableCell>
+                    <TableCell>{row.createddate|| "-"}</TableCell>
+                    <TableCell>{row.createdby|| "-"}</TableCell>
                   </TableRow>
                 ))
             ) : (
