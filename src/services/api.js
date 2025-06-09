@@ -178,3 +178,22 @@ export async function saveManualInput(data) {
   return response.json();
 }
 
+// Reset password API
+
+export async function resetPassword(data) {
+  const response = await fetch(`${API_BASE}/api/reset-password-request`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    body: JSON.stringify({ customerId: data }),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "Failed to reset password");
+  }
+
+  return response.json();
+}

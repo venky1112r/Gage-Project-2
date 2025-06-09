@@ -12,6 +12,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import { DashboardProvider } from "./context/DashboardContext.jsx";
 import SettingComponent from "./components/SettingComponent"; // Import this
 import EmailPreview from './components/EmailPreview';
+import ResetPassword from "./components/ResetPassword.jsx";
 function App() {
   return (
     <DashboardProvider>
@@ -23,6 +24,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/test" element={<Test />} />
           <Route path="/email-preview" element={<EmailPreview />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
 
           {/* Protected Routes */}
           <Route element={<ProtectedRoute />}>

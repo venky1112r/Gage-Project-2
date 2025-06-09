@@ -21,10 +21,11 @@ import {
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { ShowChart } from "@mui/icons-material";
 import AddCustomerForm from "./AddCustomerForm";
+import {resetPassword} from "../services/api.js";
 
 const initialCustomers = [
   {
-    id: "12345AG",
+    id: "1",
     name: "Clear Lake Energy",
     type: "Ethanol Company",
     source: "Internal",
@@ -33,8 +34,26 @@ const initialCustomers = [
     createdOn: "12/16/2024",
   },
   {
-    id: "12345ACI",
+    id: "2",
     name: "Ethanol Pro",
+    type: "Retailer",
+    source: "External",
+    erp: "n/a",
+    location: "Ethanol Pro",
+    createdOn: "12/16/2024",
+  },
+  {
+    id: "12345AG",
+    name: "Clear Energy",
+    type: "Ethanol Company",
+    source: "Internal",
+    erp: "Agris",
+    location: "Northeast +3 more",
+    createdOn: "12/16/2024",
+  },
+  {
+    id: "12345ACI",
+    name: "Ethanol Pro plant",
     type: "Retailer",
     source: "External",
     erp: "n/a",
@@ -86,29 +105,20 @@ const CustomersComponent = () => {
     setAnchorEl(null);
     setSelectedCustomer(null);
   };
+const handleResetPassword = async () => {
+  if (!selectedCustomer) return;
 
-  const handleResetPassword = async () => {
-    console.log("selectedCustomer", selectedCustomer.id);
-try {
-    const res = await fetch("/api/reset-password-request", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ customerId: selectedCustomer.id }),
-    });
-
-    if (res.ok) {
-      alert(`Password reset email sent to ${selectedCustomer.name}`);
-    } else {
-      alert("Failed to send reset email.");
-    }
+  console.log("selectedCustomer", selectedCustomer.id);
+  try {
+    const res = await resetPassword(selectedCustomer.id);
+    console.log("res", res);
   } catch (error) {
     console.error("Error:", error);
     alert("Something went wrong.");
+  } finally {
+    handleMenuClose();
   }
-  handleMenuClose();
-  };
+};
 
   const handleDelete = () => {
     alert(`Delete ${selectedCustomer.name}`);
