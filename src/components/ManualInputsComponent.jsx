@@ -15,17 +15,17 @@ import {
   Grid,
   InputAdornment,
   CircularProgress,
-  Alert
+  Alert,
 } from "@mui/material";
 import { useLocation } from "react-router-dom";
 import { useDashboard } from "../context/DashboardContext";
-import { saveManualInput } from "../services/api.js"; 
+import { saveManualInput } from "../services/api.js";
 
 const ManualInputsComponent = () => {
   const { manualInputs, loadManualInputs } = useDashboard();
   const [loading, setLoading] = useState(false);
-const [saveSuccess, setSaveSuccess] = useState(false);
-const [saveError, setSaveError] = useState(null);
+  const [saveSuccess, setSaveSuccess] = useState(false);
+  const [saveError, setSaveError] = useState(null);
   console.log("manualInputs", manualInputs);
 
   // ✅ Load manual input data on component mount
@@ -55,9 +55,11 @@ const [saveError, setSaveError] = useState(null);
           ? new Date(row.todate).toISOString().split("T")[0]
           : "",
       }));
-     // ✅ Sort by createddate descending (most recent first)
-    formatted.sort((a, b) => new Date(b.createddate) - new Date(a.createddate));
-    setRows(formatted);
+      // ✅ Sort by createddate descending (most recent first)
+      formatted.sort(
+        (a, b) => new Date(b.createddate) - new Date(a.createddate)
+      );
+      setRows(formatted);
     }
   }, [manualInputs]);
 
@@ -245,30 +247,32 @@ const [saveError, setSaveError] = useState(null);
     console.log("Sending to API:", JSON.stringify(newRow, null, 2));
 
     // ✅ Start loading
-  setLoading(true);
-  setSaveSuccess(false);
-  setSaveError(null);
+    setLoading(true);
+    setSaveSuccess(false);
+    setSaveError(null);
 
-  try {
-    await saveManualInput(newRow);
-    await loadManualInputs();
+    try {
+      await saveManualInput(newRow);
+      await loadManualInputs();
 
-    const updatedRows = [newRow, ...rows];
-    updatedRows.sort((a, b) => new Date(b.createddate) - new Date(a.createddate));
-    setRows(updatedRows);
+      const updatedRows = [newRow, ...rows];
+      updatedRows.sort(
+        (a, b) => new Date(b.createddate) - new Date(a.createddate)
+      );
+      setRows(updatedRows);
 
-    setSaveSuccess(true);
-    setTimeout(() => setSaveSuccess(false), 3000);
-    clearForm();
-  } catch (err) {
-    console.error("Error saving data:", err.message);
-    setSaveError(err.message);
-    alert("Failed to save data: " + err.message);
-  } finally {
-    // ✅ Stop loading regardless of success/failure
-    setLoading(false);
-  }
-};
+      setSaveSuccess(true);
+      setTimeout(() => setSaveSuccess(false), 3000);
+      clearForm();
+    } catch (err) {
+      console.error("Error saving data:", err.message);
+      setSaveError(err.message);
+      alert("Failed to save data: " + err.message);
+    } finally {
+      // ✅ Stop loading regardless of success/failure
+      setLoading(false);
+    }
+  };
 
   const clearForm = () => {
     setFormData({
@@ -403,14 +407,13 @@ const [saveError, setSaveError] = useState(null);
 
       <Box sx={{ mt: 2 }}>
         <Button variant="contained" onClick={handleSave} sx={{ mr: 2 }}>
-         {loading ? "Saving..." : "Save"}
+          {loading ? "Saving..." : "Save"}
         </Button>
         <Button variant="outlined" color="primary" onClick={clearForm}>
           Clear
         </Button>
         {saveSuccess && <Alert severity="success">Saved successfully!</Alert>}
-{saveError && <Alert severity="error">Error: {saveError}</Alert>}
-
+        {saveError && <Alert severity="error">Error: {saveError}</Alert>}
       </Box>
 
       <TableContainer component={Paper} sx={{ mt: 3 }}>
@@ -445,16 +448,16 @@ const [saveError, setSaveError] = useState(null);
                   <TableRow key={idx}>
                     <TableCell>{page * rowsPerPage + idx + 1}</TableCell>
                     <TableCell>{row.fromdate || "-"}</TableCell>
-                    <TableCell>{row.todate|| "-"}</TableCell>
-                    <TableCell>{row.fossilgasused|| "-"}</TableCell>
-                    <TableCell>{row.coalusage|| "-"}</TableCell>
-                    <TableCell>{row.gridelectricusage|| "-"}</TableCell>
-                    <TableCell>{row.renewablelectricusage|| "-"}</TableCell>
-                    <TableCell>{row.naturalgasrenewable45z|| "-"}</TableCell>
-                    <TableCell>{row.totalbushelsprocessed|| "-"}</TableCell>
-                    <TableCell>{row.totalethanolproduced|| "-"}</TableCell>
-                    <TableCell>{row.createddate|| "-"}</TableCell>
-                    <TableCell>{row.createdby|| "-"}</TableCell>
+                    <TableCell>{row.todate || "-"}</TableCell>
+                    <TableCell>{row.fossilgasused || "-"}</TableCell>
+                    <TableCell>{row.coalusage || "-"}</TableCell>
+                    <TableCell>{row.gridelectricusage || "-"}</TableCell>
+                    <TableCell>{row.renewablelectricusage || "-"}</TableCell>
+                    <TableCell>{row.naturalgasrenewable45z || "-"}</TableCell>
+                    <TableCell>{row.totalbushelsprocessed || "-"}</TableCell>
+                    <TableCell>{row.totalethanolproduced || "-"}</TableCell>
+                    <TableCell>{row.createddate || "-"}</TableCell>
+                    <TableCell>{row.createdby || "-"}</TableCell>
                   </TableRow>
                 ))
             ) : (
@@ -520,6 +523,7 @@ const [saveError, setSaveError] = useState(null);
         <Button
           variant="outlined"
           sx={{ mt: 2, color: "#000000", borderColor: "#000000" }}
+          disabled
         >
           Upload Operational CI Score File
         </Button>

@@ -92,7 +92,7 @@ import {
                   onClose={() => setOpenPeriodSelect(false)}
                 >
                   <MenuItem value="this_week">This year</MenuItem>
-                  <MenuItem value="this_month">This Month</MenuItem>
+                  <MenuItem value="this_month">This month</MenuItem>
                   <MenuItem value="previous_month">Previous month</MenuItem>
                   <MenuItem value="custom_period">Custom period</MenuItem>
                 </Select>

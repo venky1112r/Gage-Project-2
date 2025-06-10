@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Typography, TextField, Button, Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/logos/Cultura_Logo_Primary_LightBG.png";
+import { resetPasswordStoreDB } from "../services/api"; // adjust path as needed
 
 const ResetPassword = () => {
   const [token, setToken] = useState("");
@@ -17,36 +18,45 @@ const ResetPassword = () => {
     setToken(tokenFromUrl || "");
   }, []);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const newErrors = {};
-    if (!password) newErrors.password = "Password is required";
-    if (!confirmPassword) newErrors.confirmPassword = "Please confirm password";
-    if (password && confirmPassword && password !== confirmPassword) {
-      newErrors.confirmPassword = "Passwords do not match";
-    }
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+  const newErrors = {};
 
-    setErrors(newErrors);
-    if (Object.keys(newErrors).length > 0) return;
+  const specialCharRegex = /[!@#$%^&*()\-_=+{}[\]|\\:;"'<>,.?/~`]/;
+  const hasUppercase = /[A-Z]/.test(password);
+  const hasLowercase = /[a-z]/.test(password);
+  const hasNumber = /[0-9]/.test(password);
+  const hasSpecialChar = specialCharRegex.test(password);
+  const lengthValid = password.length >= 12;
 
-    try {
-      const res = await fetch("http://localhost:3000/api/reset-password", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token, newPassword: password }),
-      });
+  if (!password) newErrors.password = "Password is required";
+  if (!confirmPassword) newErrors.confirmPassword = "Please confirm password";
+  if (password !== confirmPassword)
+    newErrors.confirmPassword = "Passwords do not match";
 
-      if (res.ok) {
+  const typesMatched = [hasUppercase, hasLowercase, hasNumber, hasSpecialChar].filter(Boolean).length;
+
+  if (password && (!lengthValid || typesMatched < 3)) {
+    newErrors.password =
+      "Password must be at least 12 characters and include at least 3 of the following: uppercase, lowercase, number, special character";
+  }
+
+  setErrors(newErrors);
+  if (Object.keys(newErrors).length > 0) return;
+
+  try {
+    const response = await resetPasswordStoreDB({ token, newPassword: password });
+   if (response.ok) {
         setMessage("Password reset successfully! Redirecting to login...");
         setTimeout(() => navigate("/login"), 3000);
       } else {
         const data = await res.json();
         setMessage(data.message || "Failed to reset password.");
       }
-    } catch (error) {
-      setMessage("Error resetting password.");
-    }
-  };
+  } catch (error) {
+    setMessage(error.message || "Error resetting password.");
+  }
+};
 
   return (
     <Box

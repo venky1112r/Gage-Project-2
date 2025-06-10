@@ -33,21 +33,6 @@ export async function checkAuth(token) {
 }
 
 // Dashboard API
-export async function fetchDashboardData() {
-  const response = await fetch(`${API_BASE}/api/dashboard-metrics`, {
-    method: "GET",
-    credentials: "include", // include cookies for auth
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error("Failed to load dashboard data");
-  }
-  return response.json();
-}
-// Dashboard API
 export async function fetchDashboardSummaryMetrics() {
   const response = await fetch(`${API_BASE}/dashboard/summary-metrics`, {
     method: "GET",
@@ -80,6 +65,20 @@ export async function fetchDashboardContractsCi() {
 
 export async function fetchDashboardPlantsCi() {
   const response = await fetch(`${API_BASE}/dashboard/plants-ci-score-level`, {
+    method: "GET",
+    credentials: "include", // include cookies for auth
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to load dashboard data");
+  }
+  return response.json();
+}
+export async function fetchDashboardTopBar() {
+  const response = await fetch(`${API_BASE}/dashboard/topBar`, {
     method: "GET",
     credentials: "include", // include cookies for auth
     headers: {
@@ -145,6 +144,26 @@ export async function fetchBusinessRules() {
   return data;
 }
 
+// Business Rules save API
+
+export async function saveBusinessRules(data) {
+  const response = await fetch(`${API_BASE}/setting/business-rules`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "Failed to save input");
+  }
+
+  return response.json();
+}
+
 // manual inputs API
 export async function fetchManualInputs() {
   const response = await fetch(`${API_BASE}/setting/manual-input`, {
@@ -178,7 +197,7 @@ export async function saveManualInput(data) {
   return response.json();
 }
 
-// Reset password API
+// Reset password request API
 
 export async function resetPassword(data) {
   const response = await fetch(`${API_BASE}/api/reset-password-request`, {
@@ -188,6 +207,27 @@ export async function resetPassword(data) {
     },
     credentials: "include",
     body: JSON.stringify({ customerId: data }),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "Failed to reset password");
+  }
+
+  return response.json();
+} 
+
+// Reset password store DB api
+
+// Reset Password - Actual update
+export async function resetPasswordStoreDB({ token, newPassword }) {
+  const response = await fetch(`${API_BASE}/api/reset-password`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include", // only if your backend expects cookies
+    body: JSON.stringify({ token, newPassword }),
   });
 
   if (!response.ok) {

@@ -12,15 +12,44 @@ const GageLoginPage = () => {
   const navigate = useNavigate();
 
   // Validate form fields
+//   const validateForm = () => {
+//   const newErrors = {};
+//   const specialCharRegex = /[!@#$%^&*()\-_=+{}[\]|\\:;"'<>,.?/~`]/;
+//   const hasUppercase = /[A-Z]/.test(password);
+//   const hasLowercase = /[a-z]/.test(password);
+//   const hasNumber = /[0-9]/.test(password);
+//   const hasSpecialChar = specialCharRegex.test(password);
+//   const lengthValid = password.length >= 12;
+
+//   if (!email) newErrors.email = "Email is required";
+//   if (email && !/\S+@\S+\.\S+/.test(email))
+//     newErrors.email = "Invalid email format";
+
+//   if (!password) {
+//     newErrors.password = "Password is required";
+//   } else if (!lengthValid) {
+//     newErrors.password = "Password must be at least 12 characters long";
+//   } else {
+//     const typesMatched = [hasUppercase, hasLowercase, hasNumber, hasSpecialChar].filter(Boolean).length;
+//     if (typesMatched < 3) {
+//       newErrors.password =
+//         "Password must include at least 3 of the following: uppercase, lowercase, number, special character";
+//     }
+//   }
+
+//   setErrors(newErrors);
+//   return Object.keys(newErrors).length === 0;
+// };
+
   const validateForm = () => {
-    const newErrors = {};
-    if (!email) newErrors.email = "Email is required";
-    if (!password) newErrors.password = "Password is required";
-    if (email && !/\S+@\S+\.\S+/.test(email))
-      newErrors.email = "Invalid email format";
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+      const newErrors = {};
+      if (!email) newErrors.email = "Email is required";
+      if (!password) newErrors.password = "Password is required";
+      if (email && !/\S+@\S+\.\S+/.test(email))
+        newErrors.email = "Invalid email format";
+      setErrors(newErrors);
+      return Object.keys(newErrors).length === 0;
+    };
 
   // Handle login logic
   const handleLogin = async (e) => {
@@ -29,19 +58,7 @@ const GageLoginPage = () => {
 
     try {
        const data = await loginUser({ email, password });
-      // const response = await fetch("http://172.190.246.133/api/login", {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify({ email, password }),
-      // });
-
-      // const data = await response.json();
-
-      // if (!response.ok) {
-      //   setErrors({ general: data.message || "Login failed" });
-      //   return;
-      // }
-
+    
       const { token, userrole, plantid } = data;
 
       // ✅ Store the token in session storage

@@ -103,6 +103,7 @@ const SourcingOpportunitiesMap = ({ data }) => {
   const svgRef = useRef();
   const [view, setView] = useState("heatmap");
   const [zoomLevel, setZoomLevel] = useState(1);
+  const isDisabled = true; // or from state
   console.log("data", data);
   useEffect(() => {
     const width = 600;
@@ -166,11 +167,13 @@ const SourcingOpportunitiesMap = ({ data }) => {
           .append("path")
           .attr("fill", (d) => {
             if (view === "heatmap") return "#eee";
-            const stateSources = data.length >0 && data.filter(
-              (s) =>
-                projection([s.longitude, s.latitude]) &&
-                d3.geoContains(d, [s.longitude, s.latitude])
-            );
+            const stateSources =
+              data.length > 0 &&
+              data.filter(
+                (s) =>
+                  projection([s.longitude, s.latitude]) &&
+                  d3.geoContains(d, [s.longitude, s.latitude])
+              );
             const avgCI = d3.mean(stateSources, (s) => s.ci_score) || 0;
             return ciScale(avgCI);
           })
@@ -374,6 +377,7 @@ const SourcingOpportunitiesMap = ({ data }) => {
       },
     ];
 
+  
     return (
       <>
         <Stack
@@ -470,6 +474,10 @@ const SourcingOpportunitiesMap = ({ data }) => {
     }
     newView && setView(newView);
   };
+    const handleUploadDTN = () => {
+      console.log("handleUploadDTN function called");
+    };
+
   return (
     <Paper elevation={2} sx={{ borderRadius: 4, p: 2, height: "100%" }}>
       <Box
@@ -504,12 +512,14 @@ const SourcingOpportunitiesMap = ({ data }) => {
           No heat map information is available.
           <Typography
             component="span"
+            onClick={isDisabled ? undefined : handleUploadDTN()}
             style={{
-              color: "#800000",
-              cursor: "pointer",
+              color: isDisabled ? "#888888" : "#800000",
+              cursor: isDisabled ? "not-allowed" : "pointer",
               marginLeft: "20px",
               fontWeight: "bold",
-              textDecoration: "underline",
+              textDecoration: isDisabled ? "none" : "underline",
+              pointerEvents: isDisabled ? "none" : "auto",
             }}
           >
             Upload DTN file

@@ -22,6 +22,7 @@ import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutl
 import SearchIcon from "@mui/icons-material/Search";
 import { useLocation } from "react-router-dom";
 import { useDashboard } from "../context/DashboardContext";
+import { saveBusinessRules } from "../services/api";
 
 const BusinessRulesComponent = () => {
   const location = useLocation();
@@ -35,6 +36,9 @@ const BusinessRulesComponent = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [loading, setLoading] = useState(false);
+
+  const [originalValue, setOriginalValue] = useState("");
+
   console.log("businessRules", businessRules);
 
   useEffect(() => {
@@ -90,9 +94,9 @@ const BusinessRulesComponent = () => {
   manualRow,
   ...businessRules.map((rule) => ({
     gradelevel: rule.Name || "-",
-    civalue: "-",
+    civalue: rule.ci_score || "-",
     lastupdatedon: "-",
-    updatedby: user || "-",
+    updatedby:  "-",
   })),
 ];
       setRows(formattedRows);
@@ -109,27 +113,41 @@ const BusinessRulesComponent = () => {
   };
 
   const handleEdit = (idx) => {
+     const currentValue = rows[page * rowsPerPage + idx].civalue;
     setEditIdx(idx);
     // setEditValue(rows[idx].civalue);
-    setEditValue(
-      rows[page * rowsPerPage + idx].civalue !== "-"
-        ? rows[page * rowsPerPage + idx].civalue
-        : ""
-    );
+    setEditValue(currentValue !== "-" ? currentValue : "");
+     setOriginalValue(currentValue !== "-" ? currentValue : "");
+
+
+  setOriginalValue(currentValue !== "-" ? currentValue : "");
   };
 
-  const handleSave = () => {
-    const updatedRows = [...rows];
-    updatedRows[editIdx] = {
-      ...updatedRows[editIdx],
-      civalue: editValue || "-",
-      lastupdatedon: new Date().toLocaleDateString(),
-      updatedby: user || "-",
-    };
-    setRows(updatedRows);
-    setEditIdx(-1);
-    setEditValue("");
+const handleSave = async () => {
+  console.log("editIdx", editIdx);
+  const globalIdx = editIdx;
+  const updatedRows = [...rows];
+  const updatedRow = {
+    ...updatedRows[globalIdx],
+    civalue: editValue || "-",
+    lastupdatedon: new Date().toLocaleDateString(),
+    updatedby: user || "-",
   };
+
+  updatedRows[globalIdx] = updatedRow;
+
+  try {
+    await saveBusinessRules([updatedRow]); // Send only updated row
+    console.log("Updated business rule:", updatedRow);
+  } catch (error) {
+    console.error("Error saving business rule:", error);
+  }
+
+  setRows(updatedRows);
+  setEditIdx(-1);
+  setEditValue("");
+};
+
 
   const handleCancel = () => {
     setEditIdx(-1);
@@ -231,6 +249,7 @@ const BusinessRulesComponent = () => {
                           color="primary"
                           onClick={handleSave}
                           size="small"
+                          disabled={editValue === originalValue}
                         >
                           <SaveIcon fontSize="small" />
                         </IconButton>
@@ -301,6 +320,7 @@ const BusinessRulesComponent = () => {
         <Button
           variant="outlined"
           sx={{ mt: 2, color: "#000000", borderColor: "#000000" }}
+          disabled
         >
           Upload DTN File
         </Button>
